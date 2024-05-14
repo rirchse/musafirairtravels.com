@@ -1,0 +1,148 @@
+
+<?php $__env->startSection('title', 'Edit Account'); ?>
+<?php $__env->startSection('content'); ?>
+
+
+<section class="content-header">
+  <h1>Edit Account</h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> Accounts</a></li>
+    <li class="active">Edit Account</li>
+  </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+  <div class="row"> <!-- left column -->
+    <div class="col-md-7"> <!-- general form elements -->
+      <div class="box box-primary">
+        <div class="box-header with-border">
+          <h3 style="color: #800" class="box-title">Account Information</h3>
+        </div>
+        <?php echo Form::model($account, ['route' => ['account.update', $account->id], 'method' => 'PUT', 'files' => true]); ?>
+
+        <div class="box-body">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="name">Account Name</label>
+              <input type="text" name="name" id="name" class="form-control" placeholder="TBL, DBBL, Cash, bKash" value="<?php echo e($account->name); ?>">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label">Account Type:</label>
+              <select class="form-control" name="type">
+                <option value="">Select One</option>
+                <option value="Cash" <?php echo e($account->type == 'Cash'? 'selected':''); ?>>Cash</option>
+                <option value="Bank" <?php echo e($account->type == 'Bank'? 'selected':''); ?>>Bank</option>
+                <option value="Mobile Bank" <?php echo e($account->type == 'Mobile Bank'? 'selected':''); ?>>Mobile Bank</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="balance">Current Balance</label>
+              <input type="number" name="balance" id="balance" class="form-control" step="0.01" placeholder="0.00" value="<?php echo e($account->balance); ?>">
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="form-group">
+              <label for="bank_name">Bank Name</label>
+              <input type="text" name="bank_name" id="bank_name" class="form-control" value="<?php echo e($account->bank_name); ?>">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="account_no">Account No.:</label>
+              <input type="text" id="account_no" name="account_no" class="form-control" value="<?php echo e($account->account_no); ?>">
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="branch">Branch:</label>
+              <input type="text" id="branch" name="branch" class="form-control" value="<?php echo e($account->branch); ?>">
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="form-group">
+              <label for="card_no">Card No.:</label>
+              <input type="text" id="card_no" name="card_no" class="form-control" value="<?php echo e($account->card_no); ?>">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="routing_no">Routing No.:</label>
+              <input type="text" id="routing_no" name="routing_no" class="form-control" value="<?php echo e($account->routing_no); ?>">
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              <?php echo e(Form::label('details', 'Details:', ['class' => 'control-label'])); ?>
+
+              <?php echo Form::textarea('details', $account->name,['class'=>'form-control', 'rows' => 5]); ?>
+
+            </div>
+          </div>
+          <div class="col-md-12">
+            <button type="submit" class="btn btn-primary pull-right">Save</button>
+          </div>
+          
+          <div class="clearfix"></div>
+          <?php echo Form::close(); ?>
+
+
+        </div> <!-- /.box -->
+      </div> <!--/.col (left) -->
+    </div> <!-- /.row -->
+  </section> <!-- /.content -->
+  <?php $__env->stopSection(); ?>
+  <?php $__env->startSection('scripts'); ?>
+  <script>    
+    var balance_type = document.getElementById('balance_type');
+    var pre_balance = document.getElementById('pre_balance');
+    var balance = document.getElementById('balance');
+    var amount = document.getElementById('amount');
+    var db_bal_type = '';
+
+    function Balance(e)
+    {
+      var type = '0';
+        $.ajax({
+            type: 'GET',
+            url: '/payment_balance/'+type+'/'+e.options[e.selectedIndex].value,
+            success: function (data){
+              db_bal_type = data.success.balance_type;
+              pre_balance.value = data.success.amount;
+              // console.log(data.success.amount);
+              if(data.success.amount == null)
+              {
+                pre_balance.value = 0;
+              }
+              setBalnceType();
+            },
+            error: function (data){
+                //
+            }
+        });
+    }
+
+    // amount.addEventListener('keyup', balCalc);
+    function balCalc()
+    {
+      balance.value = Number(pre_balance.value) + Number(amount.value);
+    }
+
+    function setBalnceType()
+    {
+      for(var x = 0; balance_type.options.length > x; x++)
+      {
+        if(balance_type.options[x].value == db_bal_type)
+        {
+          balance_type.options[x].setAttribute('selected', '');
+          break;
+        }
+      }
+    }
+  </script>
+  <?php $__env->stopSection(); ?>
+<?php echo $__env->make('dashboard', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /srv/www/musafir/resources/views/layouts/accounts/edit.blade.php ENDPATH**/ ?>
