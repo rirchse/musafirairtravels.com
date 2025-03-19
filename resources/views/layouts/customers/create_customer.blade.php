@@ -102,7 +102,7 @@
                           <div class="col-md-6">
                               <div class="form-group">
                                 <label class="control-label" for="amount">Opening Balance</label>
-                                <input class="form-control" id="amount" type="number" name="amount" placeholder="Amount" set="0.01">
+                                <input class="form-control" id="amount" type="number" name="amount" placeholder="Amount" set="0.01" onkeyup="checkBal(document.getElementById('balance'))">
                               </div>
                           </div>
                           <div class="col-md-6">

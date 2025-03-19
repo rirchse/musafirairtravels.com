@@ -78,6 +78,8 @@ $source = New SourceCtrl;
             </div> <!-- /.box-body -->
             <div class="box-footer clearfix">
               <div class="pagination-sm no-margin pull-right">
+                <?php echo e($payments->links()); ?>
+
               </div>
             </div>
           </div> <!-- /.box -->

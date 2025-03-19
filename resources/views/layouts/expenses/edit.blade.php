@@ -49,6 +49,11 @@
                         <option value="Staff Dining Allowance"{{$expense->type == "Staff Dining Allowance"? 'selected':''}}>Staff Dining Allowance</option>
                         <option value="Office entertainment Expense"{{$expense->type == "Office entertainment Expense"? 'selected':''}}>Office entertainment Expense</option>
                         <option value="Partner's withdrawal"{{$expense->type == "Partner's withdrawal"? 'selected':''}}>Partner's withdrawal</option>
+                        <option value="Lunch & Snacks Bill"{{$expense->type == "Lunch & Snacks Bill"? 'selected':''}}>Lunch & Snacks Bill</option>
+                        <option value="Office Stationery"{{$expense->type == "Office Stationery"? 'selected':''}}>Office Stationery</option>
+                        <option value="Office Expenses"{{$expense->type == "Office Expenses"? 'selected':''}}>Office Expenses</option>
+                        <option value="Miscellaneous Expenses"{{$expense->type == "Miscellaneous Expenses"? 'selected':''}}>Miscellaneous Expenses</option>
+                        <option value="Bank Charge"{{$expense->type == "Bank Charge"? 'selected':''}}>Bank Charge</option>
                         <option value="Others"{{$expense->type == "Others"? 'selected':''}}>Others</option>
                       </select>
                   </div>
@@ -58,6 +63,15 @@
                       <option value="">Select Employee</option>
                       @foreach($users as $user)
                       <option value="{{$user->name}}" {{$expense->pay_to == $user->name? 'selected':''}}>{{$user->name}}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="">Pay from:</label>
+                    <select class="form-control" name="account_id" id="" required>
+                      <option value="">Select One</option>
+                      @foreach($accounts as $val)
+                      <option value="{{$val->id}}" {{$val->id == $expense->account_id? 'selected':''}}>{{$val->bank_name}}</option>
                       @endforeach
                     </select>
                   </div>

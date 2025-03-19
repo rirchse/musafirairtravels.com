@@ -188,7 +188,7 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="#"><i class="fa fa-circle-o"></i> View Earnings</a></li>
+            <li><a href="<?php echo e(route('expense.track')); ?>"><i class="fa fa-circle-o"></i> View Earnings</a></li>
           </ul>
         </li>
 
@@ -203,6 +203,7 @@
           <ul class="treeview-menu">
             <li><a href="<?php echo e(route('expense.create')); ?>"><i class="fa fa-circle-o"></i> Add Expense</a></li>
             <li><a href="<?php echo e(route('expense.index')); ?>"><i class="fa fa-circle-o"></i> View Expenses</a></li>
+            
           </ul>
         </li>
 
@@ -215,8 +216,9 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="#"><i class="fa fa-circle-o"></i> Sales Reports</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> View Reports</a></li>
+            <li><a href="<?php echo e(route('report.sale')); ?>"><i class="fa fa-circle-o"></i> Sales Reports</a></li>
+            <li><a href="<?php echo e(route('report.client')); ?>"><i class="fa fa-circle-o"></i> Client Reports</a></li>
+            <li><a href="<?php echo e(route('report.vendor')); ?>"><i class="fa fa-circle-o"></i> Vendor Reports</a></li>
           </ul>
         </li>
 
@@ -243,6 +245,7 @@
           <ul class="treeview-menu">
             <li><a href="<?php echo e(route('account.index')); ?>"><i class="fa fa-bank"></i> View Accounts</a></li>
             <li><a href="<?php echo e(route('account.statement')); ?>"><i class="fa fa-money"></i> View Statements</a></li>
+            <li><a href="<?php echo e(route('fund.transfer.index')); ?>"><i class="fa fa-money"></i> View Fund Transfers</a></li>
           </ul>
         </li>
 

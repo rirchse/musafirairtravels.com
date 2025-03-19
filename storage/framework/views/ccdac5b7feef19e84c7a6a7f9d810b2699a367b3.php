@@ -70,7 +70,7 @@ if(isset($invoice))
             <div class="col-md-12">
                 <div class="form-group">
                     <label class="control-label" for="search">Search Client</label>
-                    <input class="form-control" id="search" type="text" placeholder="Search By Name, Email, Mobile, Ticket Number" onkeyup="searchClient(this)">
+                    <input class="form-control" id="search" type="text" placeholder="Search By Name, Email, Mobile, Ticket Number" onkeyup="searchClient(this)" required>
                 </div>
             </div>
             <div id="clientInfo">
@@ -109,7 +109,7 @@ if(isset($invoice))
                 <div class="form-group">
                     <?php echo e(Form::label('vendor_id', 'Vendor (*):', ['class' => 'control-label'])); ?>
 
-                    <select name="vendor_id" class="form-control">
+                    <select name="vendor_id" class="form-control select2">
                         <option value="">Select Vendor</option>
                         <?php $__currentLoopData = $vendors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vendor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <option value="<?php echo e($vendor->id); ?>" <?php echo e($vendor_id == $vendor->id? 'selected': ''); ?>><?php echo e($vendor->name); ?></option>
@@ -548,7 +548,8 @@ if(isset($invoice))
     <?php else: ?>
     client_price.addEventListener('keyup', clientProfitCalc);
     purchase.addEventListener('keyup', clientProfitCalc);
-    function clientProfitCalc(){
+    function clientProfitCalc()
+    {
         profit.value = client_price.value - purchase.value;
     }
     <?php endif; ?>
@@ -562,6 +563,7 @@ if(isset($invoice))
         purchaseCalc();
         clientPriceCalc();
         profitCalc();
+        discCalc();
     }
     
     function taxCalc()
@@ -582,12 +584,12 @@ if(isset($invoice))
 
     function netCommCalc()
     {
-        net_commission.value = (Number(commission_amount.value) - Number(ait.value) - Number(other_expense.value) - Number(discount.value)).toFixed(2);
+        net_commission.value = (Number(commission_amount.value) - Number(ait.value) - Number(other_expense.value)).toFixed(2);
     }
 
     function purchaseCalc()
     {
-        purchase.value = (Number(gross_fare.value) - Number(net_commission.value)).toFixed(2);
+        purchase.value = (Number(gross_fare.value) - Number(net_commission.value) - Number(other_bonus.value)).toFixed(2);
     }
 
     function clientPriceCalc()
@@ -597,7 +599,7 @@ if(isset($invoice))
 
     function profitCalc()
     {
-        profit.value = (Number(net_commission.value) + Number(other_bonus.value)).toFixed(2);
+        profit.value = (Number(net_commission.value) + Number(other_bonus.value) + Number(extra_fee.value) - Number(discount.value)).toFixed(2);
     }
 
     function checkTicketNo(e)
@@ -689,5 +691,13 @@ if(isset($invoice))
     }
     
 </script>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('scripts'); ?>
+<script>
+    $(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
+    });
+  </script>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('dashboard', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /srv/www/musafir/resources/views/layouts/sales/create-sale.blade.php ENDPATH**/ ?>

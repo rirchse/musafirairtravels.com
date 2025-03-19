@@ -50,6 +50,10 @@
                         <option value="Staff Dining Allowance"<?php echo e($expense->type == "Staff Dining Allowance"? 'selected':''); ?>>Staff Dining Allowance</option>
                         <option value="Office entertainment Expense"<?php echo e($expense->type == "Office entertainment Expense"? 'selected':''); ?>>Office entertainment Expense</option>
                         <option value="Partner's withdrawal"<?php echo e($expense->type == "Partner's withdrawal"? 'selected':''); ?>>Partner's withdrawal</option>
+                        <option value="Lunch & Snacks Bill"<?php echo e($expense->type == "Lunch & Snacks Bill"? 'selected':''); ?>>Lunch & Snacks Bill</option>
+                        <option value="Office Stationery"<?php echo e($expense->type == "Office Stationery"? 'selected':''); ?>>Office Stationery</option>
+                        <option value="Office Expenses"<?php echo e($expense->type == "Office Expenses"? 'selected':''); ?>>Office Expenses</option>
+                        <option value="Miscellaneous Expenses"<?php echo e($expense->type == "Miscellaneous Expenses"? 'selected':''); ?>>Miscellaneous Expenses</option>
                         <option value="Others"<?php echo e($expense->type == "Others"? 'selected':''); ?>>Others</option>
                       </select>
                   </div>
@@ -59,6 +63,15 @@
                       <option value="">Select Employee</option>
                       <?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                       <option value="<?php echo e($user->name); ?>" <?php echo e($expense->pay_to == $user->name? 'selected':''); ?>><?php echo e($user->name); ?></option>
+                      <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="">Pay from:</label>
+                    <select class="form-control" name="account_id" id="" required>
+                      <option value="">Select One</option>
+                      <?php $__currentLoopData = $accounts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                      <option value="<?php echo e($val->id); ?>" <?php echo e($val->id == $expense->account_id? 'selected':''); ?>><?php echo e($val->bank_name); ?></option>
                       <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </select>
                   </div>
@@ -85,7 +98,7 @@
 
                     </div>
                     <div class="form-group">
-                        <?php echo e(Form::label('image', 'Attch Receipt Paper (Optinal):', ['class' => 'control-label'])); ?>
+                        <?php echo e(Form::label('image', 'Attach Receipt Paper (Optinal):', ['class' => 'control-label'])); ?>
 
                         <?php echo e(Form::file('image')); ?>
 

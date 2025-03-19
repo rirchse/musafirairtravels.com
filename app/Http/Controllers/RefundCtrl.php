@@ -7,6 +7,7 @@ use App\RefundItem;
 use App\Sale;
 use App\Customer;
 use App\Vendor;
+use App\Report;
 use Auth;
 use Session;
 
@@ -26,6 +27,7 @@ class RefundCtrl extends Controller
       ->leftJoin('sales', 'sales.id', 'refund_items.sale_id')
       ->leftJoin('customers', 'customers.id', 'sales.customer_id')
       ->select('refunds.*', 'customers.name', 'sales.ticket_no', 'sales.pax_name', 'sales.client_price', 'sales.purchase')
+      ->orderBy('refunds.id', 'DESC')
       ->paginate(25);
       return view('layouts.refunds.view_refund', compact('sales'));
     }
@@ -40,10 +42,12 @@ class RefundCtrl extends Controller
     public function refundStore(Request $request)
     {
       $data = $request->all();
+
       if(isset($data['_token']))
       {
         unset($data['_token']);
       }
+
       $data['created_by'] = Auth::id();
 
       if($request->client_id && $request->invoice_id && $request->ticket_no)
@@ -72,10 +76,12 @@ class RefundCtrl extends Controller
       $data['client_charge'] = $client_charge;
       $data['vendor_charge'] = $vendor_charge;
 
-      // dd($data);
+      $sale = Sale::find($data['sale_ids'][0]);
 
       $insert = New Refund;
       $insert->invoice_id = $data['invoice_id'][0];
+      $insert->vendor_id = $sale->vendor_id;
+      $insert->client_id = $sale->customer_id;
       $insert->client_charge = $client_charge;
       $insert->vendor_charge = $vendor_charge;
       $insert->date = date('Y-m-d');
@@ -86,9 +92,9 @@ class RefundCtrl extends Controller
       for($n = 0; count($data['sale_ids']) > $n; $n++)
       {
         RefundItem::insert([
-          'refund_id' => $refund->id,
-          'sale_id' => $data['sale_ids'][$n],
-          'ticket_no' => $data['ticket_no'][$n],
+          'refund_id'     => $refund->id,
+          'sale_id'       => $data['sale_ids'][$n],
+          'ticket_no'     => $data['ticket_no'][$n],
           'client_charge' => $data['client_charges'][$n],
           'vendor_charge' => $data['vendor_charges'][$n]
         ]);
@@ -97,12 +103,43 @@ class RefundCtrl extends Controller
       $sale = Sale::find($data['sale_ids'][0]);
       $client = Customer::find($sale->customer_id);
       $vendor = Vendor::find($sale->vendor_id);
+      $report = new ReportCtrl;
 
-      /** update client balance */
-      Customer::where('id', $sale->customer_id)->update(['amount' => $client->amount + ($total_sale - $client_charge) ]);
+      if(isset($client))
+      {
+        /** update client balance */
+        Customer::where('id', $sale->customer_id)->update(['amount' => $client->amount + ($total_sale - $client_charge) ]);
+  
+        /** store client report */
+        $report->storeReport([
+          'user_id'     => $client->id,
+          'user_type'   => 'Client',
+          'report_type' => 'Refund',
+          'foreign_id'  => $refund->id,
+          'name'        => 'Air-Ticket Refund',
+          'debit'       => null,
+          'credit'      => $total_sale - $client_charge,
+          'balance'     => $client->amount + ($total_sale - $client_charge),
+        ]);
+      }
 
-      /** udpate vendor balance */
-      Vendor::where('id', $sale->vendor_id)->update(['amount' => $vendor->amount + ($total_purchase - $vendor_charge) ]);
+      if(isset($vendor))
+      {
+        /** update vendor balance */
+        Vendor::where('id', $sale->vendor_id)->update(['amount' => $vendor->amount + ($total_purchase - $vendor_charge) ]);
+  
+        /** store vendor report */
+        $report->storeReport([
+          'user_id'     => $vendor->id,
+          'user_type'   => 'Vendor',
+          'report_type' => 'Refund',
+          'foreign_id'  => $refund->id,
+          'name'        => 'Air-Ticket Refund',
+          'debit'       => null,
+          'credit'      => $total_purchase - $vendor_charge,
+          'balance'     => $vendor->amount + ($total_purchase - $vendor_charge),
+        ]);
+      }
       
       Session::flash('success', 'The invoice successfully refunded.');
       return redirect()->route('sale.refund.show', $refund->id);

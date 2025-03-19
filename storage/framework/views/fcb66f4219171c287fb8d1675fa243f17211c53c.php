@@ -26,7 +26,7 @@ $source = New SourceCtrl;
           <div class="col-md-12 text-right toolbar-icon">
             <a href="<?php echo e(route('expense.index')); ?>" title="View <?php echo e(Session::get('_types')); ?> expenses" class="label label-success"><i class="fa fa-list"></i></a>
             <a href="<?php echo e(route('expense.edit',$expense->id)); ?>" class="label label-warning" title="Edit this expense"><i class="fa fa-edit"></i></a>
-            
+            <a href="#" title="Print" class="label label-info" onclick="printDiv()"><i class="fa fa-print"></i></a>
             
             <form action="<?php echo e(route('expense.destroy', $expense->id)); ?>" method="POST" style="max-width: 32px; display:inline-block">
               <?php echo csrf_field(); ?>
@@ -34,7 +34,18 @@ $source = New SourceCtrl;
               <button type="submit" class="label label-danger" onclick="return confirm('Are you sure you want to delete this?');" title="Delete"><i class="fa fa-trash"></i></button></form>
             
           </div>
-          <div class="col-md-12">
+          <div class="col-md-12" id="table">
+            <table>
+              <tr>
+                <td style="width: 100%;display:none" id="heading">
+                  <?php echo $__env->make('layouts.print_header', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                  <br>
+                </td>
+              </tr>
+              <tr>
+                <td><h4>Expense Details</h4></td>
+              </tr>
+            </table>
             <table class="table">
                 <tbody>
                   <tr>
@@ -52,6 +63,14 @@ $source = New SourceCtrl;
                   <tr>
                     <th>Amount:</th>
                     <td><?php echo e($expense->amount); ?></td>
+                  </tr>
+                  <tr>
+                    <th>Paid From:</th>
+                    <td><?php echo e($expense->bank_name); ?></td>
+                  </tr>
+                  <tr>
+                    <th>Last Account Balance:</th>
+                    <td><?php echo e($expense->account_bal); ?> BDT</td>
                   </tr>
                   <tr>
                     <th>Expense at:</th>
@@ -82,7 +101,7 @@ $source = New SourceCtrl;
                     <th>Record Updated On:</th>
                     <td><?php echo e($source->dformat($expense->updated_at)); ?> </td>
                   </tr>
-                  <tr>
+                  <tr class="receipt">
                     <th>Receipt:</th>
                     <td>
                       <a target="_blank" href="<?php echo e($expense->image); ?>">
@@ -100,6 +119,29 @@ $source = New SourceCtrl;
       </div><!-- /.box -->
     </div><!--/.col (left) -->
   </section><!-- /.content -->
+  <script>
+    //js print a div
+  function printDiv()
+  {
+    document.getElementById('heading').style.display = 'block';
+    var divToPrint = document.getElementById('table');
+    var htmlToPrint = '' +
+        '<style type="text/css">' +
+        '.heading{display:block}'+
+        '.pageheader{font-size:15px}'+
+        'table { border-collapse:collapse; font-size:15px;width:100%}' +
+        '.table tr th, .table tr td { padding: 10px; border:1px solid #ddd; text-align:left}' +
+        'table tr{background: #ddd}'+
+        '.receipt{display:none}'+
+        '</style>';
+    htmlToPrint += divToPrint.outerHTML;
+    newWin = window.open(htmlToPrint);
+    newWin.document.write(htmlToPrint);
+    newWin.print();
+    newWin.close();
+    document.getElementById('heading').style.display = 'none';
+  }
+  </script>
    
 <?php $__env->stopSection(); ?>
 

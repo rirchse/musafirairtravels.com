@@ -11,6 +11,8 @@ use App\Expense;
 use App\Payment;
 use App\Account;
 use Session;
+use Auth;
+use DB;
 
 class AccountCtrl extends Controller
 {
@@ -37,8 +39,6 @@ class AccountCtrl extends Controller
     {
       unset($data['_token']);
     }
-
-    // dd($data);
 
     try{
       Account::insert($data);
@@ -121,7 +121,64 @@ class AccountCtrl extends Controller
     }
 
     $payments = $payments->get();
-    // dd($payments);
+    
     return view('layouts.accounts.statement', compact('payments', 'data'));
+  }
+
+  /** fund transfer */
+  public function fundTransfer($id)
+  {
+    $account = Account::find($id);
+    $accounts = Account::all();
+    return view('layouts.accounts.fund_transfer', compact('account', 'accounts'));
+  }
+
+  public function fundTransferStore(Request $request)
+  {
+    $data = $request->all();
+    if(isset($data['_token']))
+    {
+      unset($data['_token']);
+    }
+
+    $account_from = Account::find($data['account_from']);
+    $account_to = Account::find($data['account_to']);
+
+    $from_balance = $account_from->balance - $data['amount'];
+    $to_balance = $account_to->balance + $data['amount'];
+
+    $data['account_from_balance'] = $from_balance;
+    $data['account_to_balance'] = $to_balance;
+
+    $data['created_by'] = Auth::id();
+
+    try{
+      DB::table('fund_transfers')->insert($data);
+    }
+    catch(\E $e)
+    {
+      return $e;
+    }
+
+    /** update from account */
+    Account::where('id', $account_from->id)->update(['balance' => $from_balance]);
+
+    /** update to account */
+    Account::where('id', $account_to->id)->update(['balance' => $to_balance]);
+
+    Session::flash('success', 'Fund transfer successfully completed');
+    return redirect()->route('account.index');
+  }
+
+  public function fundTransferIndex()
+  {
+    $transfers = DB::table('fund_transfers')
+    ->leftJoin('accounts as account_from', 'account_from.id', 'fund_transfers.account_from')
+    ->leftJoin('accounts as account_to', 'account_to.id', 'fund_transfers.account_to')
+    ->orderBy('fund_transfers.id', 'DESC')
+    ->select('fund_transfers.*', 'account_from.bank_name as from_name', 'account_to.bank_name as to_name')
+    ->paginate(25);
+    
+    return view('layouts.accounts.fund_transfer_index', compact('transfers'));
   }
 }

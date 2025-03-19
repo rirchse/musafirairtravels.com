@@ -17,7 +17,7 @@ $source = New SourceCtrl;
 
 <!-- Main content -->
 <section class="content">
-  <div class="row"><!-- row -->
+  <div class="row" id="table"><!-- row -->
     <div class="col-md-12"><!-- general form elements -->
       <div class="box box-primary">
         <div class="box-header with-border"> <h3 style="color: #800" class="box-title">Refunds Information</h3></div>
@@ -26,6 +26,7 @@ $source = New SourceCtrl;
           @if(Auth::user()->authorizeRoles(['SuperAdmin', 'Admin']))
           <a href="{{route('sale.refund.create')}}" title="Add Refund" class="label label-info"><i class="fa fa-plus"></i></a>
           @endif
+          <a href="#" title="Print" class="label label-info" onclick="printDiv()"><i class="fa fa-print"></i></a>
 
           <a href="{{route('sale.refund.index')}}" title="View" class="label label-success"><i class="fa fa-list"></i></a>
           {{-- <a href="{{route('sale.edit',$refund->id)}}" class="label label-warning" title="Edit"><i class="fa fa-edit"></i></a> --}}
@@ -41,7 +42,8 @@ $source = New SourceCtrl;
       <div class="box box-info">
         <table class="table">
           <tr>
-            <th colspan="4" style="text-align:center"><h4>Summary of Client Refund Charge:</h4></th>
+            <th colspan="4" style="text-align:center"><h4>Summary of Client Refund Charge:</h4>
+            </th>
           </tr>
           <tr>
             <th>SL</th>
@@ -109,5 +111,28 @@ $source = New SourceCtrl;
       <div class="clearfix"></div>
     </div><!--/.col (left) -->
 </section><!-- /.content -->
+<script>
+  //js print a div
+function printDiv()
+{
+  // document.getElementById('heading').style.display = 'block';
+  var divToPrint = document.getElementById('table');
+  var htmlToPrint = '' +
+      '<style type="text/css">' +
+      '.heading{display:block}'+
+      '.pageheader{font-size:15px}'+
+      'table { border-collapse:collapse; font-size:15px;width:100%}' +
+      '.table tr th, .table tr td { padding: 10px; border:1px solid #ddd; text-align:left}' +
+      'table tr{background: #ddd}'+
+      '.receipt{display:none}'+
+      '</style>';
+  htmlToPrint += divToPrint.outerHTML;
+  newWin = window.open(htmlToPrint);
+  newWin.document.write(htmlToPrint);
+  newWin.print();
+  newWin.close();
+  // document.getElementById('heading').style.display = 'none';
+}
+</script>
 
 @endsection

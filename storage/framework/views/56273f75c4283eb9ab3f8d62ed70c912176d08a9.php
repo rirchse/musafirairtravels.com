@@ -76,18 +76,18 @@
                           </div>
                           <div class="col-md-6">
                             <div class="form-group">
-                              <label for="">Opening Balance Type</label>
-                              <select name="balance_type" class="form-control">
-                                <option value="">Select Opening Balance Type</option>
-                                <option value="Advance">Advance</option>
-                                <option value="Due">Due</option>
-                              </select>
+                              <label for="">Opening Balance</label>
+                              <input type="number" id="amount" name="amount" class="form-control" set="0.01">
                             </div>
                           </div>
                           <div class="col-md-6">
                             <div class="form-group">
-                              <label for="">Opening Balance</label>
-                              <input type="number" name="amount" class="form-control" set="0.01">
+                              <label for="">Balance Type</label>
+                              <select name="balance_type" class="form-control" onchange="checkBal(this)">
+                                <option value="">Select Opening Balance Type</option>
+                                <option value="Advance">Advance</option>
+                                <option value="Due">Due</option>
+                              </select>
                             </div>
                           </div>
                         </div>
@@ -122,5 +122,20 @@
         </div> <!--/.col (left) -->
       </div> <!-- /.row -->
     </section> <!-- /.content -->
+    
+    <script>
+      function checkBal(e)
+      {
+        var amount = document.getElementById('amount');
+        if(amount.value > 0 && e.options[e.selectedIndex].value == 'Due')
+        {
+          amount.value = '-'+amount.value;
+        }
+        else if(amount.value < 0)
+        {
+          amount.value = amount.value.substring(1);
+        }
+      }
+    </script>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('dashboard', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /srv/www/musafir/resources/views/layouts/vendors/create_vendor.blade.php ENDPATH**/ ?>

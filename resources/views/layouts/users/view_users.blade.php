@@ -46,6 +46,7 @@
                 </thead>
 
                 @foreach($users as $user)
+                {{-- @if(Auth::user()->authorizeRoles(['SuperAdmin', 'Admin'])) --}}
 
                 <tr>
                   <td>{{$user->id}}</td>

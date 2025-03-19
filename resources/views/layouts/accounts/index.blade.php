@@ -66,6 +66,7 @@ $source = New SourceCtrl;
                   <td>
                     {{-- <a href="{{route('account.show', $account->id)}}" class="label label-info" title="account Details"><i class="fa fa-file-text"></i></a> --}}
                     <a href="{{route('account.edit',$account->id)}}" class="label label-warning" title="Edit this account"><i class="fa fa-edit"></i></a>
+                    <a href="{{route('fund.transfer.create',$account->id)}}" class="label label-success" title="Fund Transfer"><i class="fa fa-exchange"></i></a>
 
                     @if(Auth::user()->authorizeRoles(['SuperAdmin', 'Admin']))
                     {{-- <a href="{{route('account.delete', $account->id)}}" class="label label-danger" onclick="return confirm('Are you sure you want to delete this item!');" title="Delete this item"><i class="fa fa-trash"></i></a> --}}

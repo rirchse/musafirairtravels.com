@@ -129,19 +129,48 @@ class PaymentCtrl extends Controller
         /** get account */
         $account = Account::find($data['account_id']);
 
+        /** report object */
+        $report = new ReportCtrl;
+
         /** update client balance */
         if($data['user_type'] == 'Client')
         {
+            $client = Customer::find($data['user_id']);
             Customer::where('id', $data['user_id'])->update([
                 'amount' => $data['balance']
             ]);
+
+            //store client report
+            $report->storeReport([
+                'user_id'     => $client->id,
+                'user_type'   => 'Client',
+                'report_type' => 'Payment',
+                'foreign_id'  => $payment->id,
+                'name'        => 'Client Payment',
+                'debit'       => null,
+                'credit'      => $data['amount'],
+                'balance'     => $data['balance'],
+            ]);
         }
 
-        /** update client balance */
+        /** update vendor balance */
         if($data['user_type'] == 'Vendor')
         {
+            $vendor = Vendor::find($data['user_id']);
             Vendor::where('id', $data['user_id'])->update([
                 'amount' => $data['balance']
+            ]);
+
+            //store vendor report
+            $report->storeReport([
+                'user_id'     => $vendor->id,
+                'user_type'   => 'Vendor',
+                'report_type' => 'Payment',
+                'foreign_id'  => $payment->id,
+                'name'        => 'Vendor Payment',
+                'debit'       => null,
+                'credit'      => $data['amount'],
+                'balance'     => $data['balance'],
             ]);
         }
 
@@ -220,9 +249,18 @@ class PaymentCtrl extends Controller
 
     public function print($id)
     {
+        $payment = Payment::find($id);
         $invoice = Payment::leftJoin('customers', 'customers.id', 'payments.user_id')
-        ->select('payments.*', 'customers.name as user_name')
-        ->find($id);
+        ->leftJoin('vendors', 'vendors.id', 'payments.user_id')
+        ->leftJoin('accounts', 'accounts.id', 'payments.account_id');
+        if($payment->user_type == 'Vendor')
+        {
+            $invoice = $invoice->select('payments.*', 'vendors.name as user_name', 'accounts.bank_name');
+        }else
+        {
+            $invoice = $invoice->select('payments.*', 'customers.name as user_name', 'accounts.bank_name');
+        }
+        $invoice = $invoice->find($id);
         // dd($invoice);
         return view('layouts.payments.print_money_receipt', compact('invoice'));
     }

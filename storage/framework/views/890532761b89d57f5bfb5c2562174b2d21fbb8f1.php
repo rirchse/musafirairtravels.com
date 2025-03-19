@@ -27,7 +27,7 @@
                       </div>
                       <div class="form-group">
                           <label for="type">Expense Type</label>
-                          <select class="form-control" name="type" id="type">
+                          <select class="form-control" name="type" id="type" required>
                             <option value="">Select Expense Type</option>
                             <option value="Office Rent">Office Rent</option>
                             <option value="Electricity Bill">Electricity Bill</option>
@@ -39,6 +39,11 @@
                             <option value="Staff Dining Allowance">Staff Dining Allowance</option>
                             <option value="Office entertainment Expense">Office entertainment Expense</option>
                             <option value="Partner's withdrawal">Partner's withdrawal</option>
+                            <option value="Lunch & Snacks Bill">Lunch & Snacks Bill</option>
+                            <option value="Office Stationery">Office Stationery</option>
+                            <option value="Office Expenses">Office Expenses</option>
+                            <option value="Miscellaneous Expenses">Miscellaneous Expenses</option>
+                            <option value="Bank Charge">Bank Charge</option>
                             <option value="Others">Others</option>
                           </select>
                       </div>
@@ -48,6 +53,15 @@
                           <option value="">Select Employee</option>
                           <?php $__currentLoopData = $employees; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                           <option value="<?php echo e($user->id); ?>"><?php echo e($user->name); ?></option>
+                          <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="">Pay from:</label>
+                        <select class="form-control" name="account_id" id="" required>
+                          <option value="">Select One</option>
+                          <?php $__currentLoopData = $accounts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                          <option value="<?php echo e($val->id); ?>"><?php echo e($val->bank_name); ?></option>
                           <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                       </div>

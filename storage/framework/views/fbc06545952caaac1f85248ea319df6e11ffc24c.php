@@ -24,6 +24,16 @@ $source = New SourceCtrl;
           <div class="box">
             <div class="box-header">
               <h3 class="box-title">List of Customer Accounts</h3>
+              <div class="box-tools">
+                <form action="<?php echo e(route('search.customer')); ?>" method="post" class="form-inline">
+                  <?php echo csrf_field(); ?>
+                  <a href="<?php echo e(route('customer.create')); ?>" class="btn btn-info btn-sm"><i class="fa fa-plus"></i></a>
+                  <div class="input-group">
+                    <input type="text" name="search" placeholder="Name, Contact, Email, Passport">
+                    <span class="input-addon"><button><i class="fa fa-search"></i></button></span>
+                  </div>
+                </form>
+              </div>
             </div>
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">
@@ -65,7 +75,8 @@ $source = New SourceCtrl;
             <!-- /.box-body -->
             <div class="box-footer clearfix">
               <div class="pagination-sm no-margin pull-right">
-                
+                <?php echo e($customers->links()); ?>
+
               </div>
             </div>
           </div>

@@ -85,18 +85,18 @@
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label for="">Opening Balance Type</label>
+                          <label for="">Opening Balance</label>
+                          <input type="number" id="amount" name="amount" class="form-control" set="0.01" value="<?php echo e($vendor->amount); ?>">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="">Balance Type</label>
                           <select name="balance_type" class="form-control" onchange="checkBal(this)">
                             <option value="">Select Opening Balance Type</option>
                             <option value="Advance" <?php echo e($vendor->balance_type == 'Advance'?'selected':''); ?>>Advance</option>
                             <option value="Due" <?php echo e($vendor->balance_type == 'Due'?'selected':''); ?>>Due</option>
                           </select>
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label for="">Opening Balance</label>
-                          <input type="number" id="amount" name="amount" class="form-control" set="0.01" value="<?php echo e($vendor->amount); ?>">
                         </div>
                       </div>
                     </div>

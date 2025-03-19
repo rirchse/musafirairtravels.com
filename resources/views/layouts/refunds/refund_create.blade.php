@@ -34,7 +34,7 @@
           <div class="col-md-2">
             <div class="form-group">
             <label for="invoice">Select Invoice No.</label>
-            <select name="invoice_id" id="invoice" class="form-control select2" onchange="searchTickets(this)">
+            <select name="invoice_id" id="invoice" class="form-control select2" onchange="searchTickets(this)" required>
             </select>
           </div>
           </div>

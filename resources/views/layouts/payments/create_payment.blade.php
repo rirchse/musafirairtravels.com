@@ -51,7 +51,7 @@
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label">{{$type}} Information:</label>
-              <select class="form-control" name="user_id" onchange="Balance(this);" required>
+              <select class="form-control select2" name="user_id" onchange="Balance(this);" required>
                 <option value="">Select {{$type}}</option>
                 @if($type == 'Client')
                 @foreach($clients as $client)
@@ -196,5 +196,12 @@
       
     }
 
+  </script>
+
+  <script>
+    $(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
+    });
   </script>
   @endsection

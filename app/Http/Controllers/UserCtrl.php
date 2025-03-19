@@ -52,8 +52,11 @@ class UserCtrl extends Controller
     {
        $this->validate($request, [
             'user_role' => 'required',
-            'name'      => 'required|max:255',
-            'contact'   => 'required',            
+            'name'      => 'required|max:50',
+            'contact'   => 'required',
+            'email'     => 'required|email|unique:users|max:32',
+            'password'  => 'required|confirmed|max:32',
+            'image'     => 'nullable|mime:jpg, jpeg, png|max:1000',
         ]);
 
        $role = Role::find($request->user_role);
@@ -167,7 +170,7 @@ class UserCtrl extends Controller
 
         $user->delete();
         Session::flash('success', 'User Successfully Removed');
-        return redirect()->route('users.index');
+        return redirect()->route('user.index');
     }
 
     public function changePassword()

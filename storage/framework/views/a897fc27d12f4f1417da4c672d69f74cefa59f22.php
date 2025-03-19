@@ -52,7 +52,7 @@
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label"><?php echo e($type); ?> Information:</label>
-              <select class="form-control" name="user_id" onchange="Balance(this);" required>
+              <select class="form-control select2" name="user_id" onchange="Balance(this);" required>
                 <option value="">Select <?php echo e($type); ?></option>
                 <?php if($type == 'Client'): ?>
                 <?php $__currentLoopData = $clients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $client): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -202,6 +202,13 @@
       
     }
 
+  </script>
+
+  <script>
+    $(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
+    });
   </script>
   <?php $__env->stopSection(); ?>
 <?php echo $__env->make('dashboard', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /srv/www/musafir/resources/views/layouts/payments/create_payment.blade.php ENDPATH**/ ?>

@@ -56,7 +56,7 @@ $source = New SourceCtrl;
                   <td>{{$sale->purchase}}</td>
                   <td>
                     <a href="{{route('sale.show', $sale->invoice_id)}}" class="label label-info" title="Invoice details"><i class="fa fa-file-text"></i></a>
-                    <a href="{{route('sale.edit',$sale->id)}}" class="label label-warning" title="Edit this sale"><i class="fa fa-edit"></i></a>
+                    <a href="{{route('sale.edit',$sale->id)}}" class="label label-warning" title="Edit"><i class="fa fa-edit"></i></a>
                     {{-- <a href="/sale/{{$sale->id}}/print" class="label label-{{$sale->print_status?'default':'primary'}}" title="Print"><i class="fa fa-print"></i></a> --}}
                   </td>
                 </tr>

@@ -66,6 +66,7 @@ $source = New SourceCtrl;
                   <td>
                     
                     <a href="<?php echo e(route('account.edit',$account->id)); ?>" class="label label-warning" title="Edit this account"><i class="fa fa-edit"></i></a>
+                    <a href="<?php echo e(route('fund.transfer.create',$account->id)); ?>" class="label label-success" title="Fund Transfer"><i class="fa fa-exchange"></i></a>
 
                     <?php if(Auth::user()->authorizeRoles(['SuperAdmin', 'Admin'])): ?>
                     

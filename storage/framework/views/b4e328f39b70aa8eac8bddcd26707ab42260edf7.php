@@ -105,27 +105,27 @@
                               <div class="form-group">
                                 <label class="control-label" for="walking_customer"> Walking Customer?</label><br>
                                 <label>
-                                  <input class="" type="radio" name="walking_customer"> Yes
+                                  <input class="" type="radio" name="walking_customer" value="Yes"> Yes
                               </label>&nbsp;
                               <label>
-                                  <input class="" type="radio" name="walking_customer"> No
+                                  <input class="" type="radio" name="walking_customer" value="No"> No
                               </label>
                               </div>
                           </div>
                           <div class="col-md-6">
                               <div class="form-group">
-                                <label class="control-label" for="balance">Opening Balance</label>
-                                <select class="form-control" id="balance" name="balance_type">
-                                  <option value="">Select Balance Type</option>
-                                  <option value="Advance">Advance</option>
-                                  <option value="Due">Due</option>
-                                </select>
+                                <label class="control-label" for="amount">Opening Balance</label>
+                                <input class="form-control" id="amount" type="number" name="amount" placeholder="Amount" set="0.01" onkeyup="checkBal(document.getElementById('balance'))">
                               </div>
                           </div>
                           <div class="col-md-6">
                               <div class="form-group">
-                                <label class="control-label" for="amount">Amount</label>
-                                <input class="form-control" id="amount" type="number" name="amount" placeholder="Amount" set="0.01">
+                                <label class="control-label" for="balance">Balance Type</label>
+                                <select class="form-control" id="balance" name="balance_type" onchange="checkBal(this)">
+                                  <option value="">Select Balance Type</option>
+                                  <option value="Advance">Advance</option>
+                                  <option value="Due">Due</option>
+                                </select>
                               </div>
                           </div>
                         <div class="clearfix"></div>
@@ -220,5 +220,20 @@
         </div> <!--/.col (left) -->
       </div> <!-- /.row -->
     </section> <!-- /.content -->
+
+    <script>
+      function checkBal(e)
+      {
+        var amount = document.getElementById('amount');
+        if(amount.value > 0 && e.options[e.selectedIndex].value == 'Due')
+        {
+          amount.value = '-'+amount.value;
+        }
+        else if(amount.value < 0)
+        {
+          amount.value = amount.value.substring(1);
+        }
+      }
+    </script>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('dashboard', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /srv/www/musafir/resources/views/layouts/customers/create_customer.blade.php ENDPATH**/ ?>

@@ -81,13 +81,13 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="control-label" for="country">Country <span class="req">*</span></label>
-                    <select class="form-control" id="country" name="country" required></select>
+                    <select class="form-control select2" id="country" name="country" required></select>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="control-label" for="visa_type">VISA Type <span class="req">*</span></label>
-                    <select class="form-control" id="visa_type" name="visa_type" required>
+                    <select class="form-control select2" id="visa_type" name="visa_type" required>
                         <option value="">Select Type</option>
                         <option value="Employment visa">Employment visa</option>
                         <option value="Student visa">Student visa</option>
@@ -103,6 +103,7 @@
                     </select>
                 </div>
             </div>
+            <div class="clearfix"></div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="token">Token</label>
@@ -167,7 +168,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="vendor_id">Vendor</label>
-                    <select name="vendor_id" class="form-control">
+                    <select name="vendor_id" class="form-control select2">
                         <option value="">Select Vendor</option>
                         <?php $__currentLoopData = $vendors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vendor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <option value="<?php echo e($vendor->id); ?>"><?php echo e($vendor->name); ?></option>
@@ -446,5 +447,13 @@
     }
     getCountries(document.getElementById('country'));
 </script>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('scripts'); ?>
+<script>
+    $(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
+    });
+  </script>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('dashboard', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /srv/www/musafir/resources/views/layouts/invoice_others/create.blade.php ENDPATH**/ ?>

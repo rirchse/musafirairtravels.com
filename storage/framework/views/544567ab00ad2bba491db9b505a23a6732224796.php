@@ -156,14 +156,8 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="control-label" for="cost_price">Cost Price</label>
+                    <label class="control-label" for="cost_price">Purchase Price</label>
                     <input class="form-control" id="cost_price" type="number" name="cost_price" step="0.01" value="<?php echo e($invoice->cost_price); ?>">
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="control-label" for="total_cost_price">Total Cost Price</label>
-                    <input class="form-control" id="total_cost_price" type="number" name="total_cost_price" step="0.01" value="<?php echo e($invoice->total_cost_price); ?>">
                 </div>
             </div>
             <div class="col-md-4">
@@ -181,60 +175,6 @@
                         <option value="<?php echo e($vendor->id); ?>" <?php echo e($invoice->vendor_id == $vendor->id? 'selected': ''); ?>><?php echo e($vendor->name); ?></option>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </select>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="control-label" for="sub_total">Sub Total</label>
-                    <input class="form-control" id="sub_total" type="number" name="sub_total" step="0.01" value="<?php echo e($invoice->sub_total); ?>">
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="control-label" for="discount">Discount</label>
-                    <input class="form-control" id="discount" type="number" name="discount" step="0.01" value="<?php echo e($invoice->discount); ?>">
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="control-label" for="service_charge">Service Charge</label>
-                    <input class="form-control" id="service_charge" type="number" name="service_charge" step="0.01" value="<?php echo e($invoice->service_charge); ?>">
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="control-label" for="vat_tax">Vat/Tax</label>
-                    <input class="form-control" id="vat_tax" type="number" name="vat_tax" step="0.01" value="<?php echo e($invoice->vat_tax); ?>">
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="control-label" for="net_total">Net Total</label>
-                    <input class="form-control" id="net_total" type="number" name="net_total" step="0.01" value="<?php echo e($invoice->net_total); ?>">
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="control-label" for="agent_commission">Other Bonus</label>
-                    <input class="form-control" id="agent_commission" type="number" name="agent_commission" step="0.01" value="<?php echo e($invoice->agent_commission); ?>">
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="control-label" for="invoice_due">Invoice Due</label>
-                    <input class="form-control" id="invoice_due" type="number" name="invoice_due" step="0.01" value="<?php echo e($invoice->invoice_due); ?>">
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="control-label" for="present_balance">Present Balance</label>
-                    <input class="form-control" id="present_balance" type="number" name="present_balance" step="0.01" value="<?php echo e($invoice->present_balance); ?>">
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="control-label" for="reference">Reference</label>
-                    <input class="form-control" id="reference" type="text" name="reference" value="<?php echo e($invoice->reference); ?>">
                 </div>
             </div>
             <div class="col-md-12">
@@ -390,35 +330,20 @@ var quantity   = document.getElementById('quantity');
 var unit_price  = document.getElementById('unit_price');
 var total_sale = document.getElementById('total_sale');
 var cost_price = document.getElementById('cost_price');
-var total_cost_price = document.getElementById('total_cost_price');
 var profit = document.getElementById('profit');
-var sub_total = document.getElementById('sub_total');
-var discount = document.getElementById('discount');
-var service_charge = document.getElementById('service_charge');
-var vat_tax = document.getElementById('vat_tax');
-var net_total = document.getElementById('net_total');
-var other_bonus = document.getElementById('other_bonus');
-var invoice_due = document.getElementById('invoice_due');
-var present_balance = document.getElementById('present_balance');
 
-/* number fix */
-function fix(n)
-{
-    var number = Number(n);
-    return number;
-}
+    /* number fix */
+    function fix(n)
+    {
+        var number = Number(n);
+        return number;
+    }
 
-function Calc()
-{
-    totalSale = fix(quantity.value) * fix(unit_price.value);
-    total_cost_price.value = fix(cost_price.value) + fix(service_charge.value) + fix(vat_tax.value);
-    total_sale.value = totalSale + fix(total_cost_price.value) + fix(profit.value) + fix(other_bonus.value);
-    sub_total.value = fix(total_sale.value) + fix(total_cost_price.value);
-    net_total.value = fix(sub_total.value) - fix(discount.value);
-
-    invoice_due.value = fix(net_total.value) + fix(present_balance.value);
-
-}
+    function Calc()
+    {
+        total_sale.value = fix(quantity.value) * fix(unit_price.value);
+        profit.value = fix(total_sale.value) - fix(cost_price.value);
+    }
 
     function checkTicketNo(e)
     {

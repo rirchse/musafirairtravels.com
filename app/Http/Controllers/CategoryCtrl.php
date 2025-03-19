@@ -106,7 +106,7 @@ class CategoryCtrl extends Controller
 
         $category->updated_by  = Auth::id();
 
-        //multipul image uplode to use this puction======================
+        //multipul image uplode to use this production====
         if($request->image >0){
 
             if (File::exists('img/category/' .$category->image)) {

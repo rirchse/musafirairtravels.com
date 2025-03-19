@@ -21,19 +21,23 @@ $source = New SourceCtrl;
   <div class="row"><!-- row -->
     <div class="col-md-7"><!-- general form elements -->
       <div class="box box-primary">
-        <div class="box-header with-border"> <h3 style="color: #800" class="box-title">Invoices Information</h3></div>
+        <div class="box-header with-border"><h3 style="color: #800" class="box-title">Invoices Information</h3></div>
         <div class="col-md-12 text-right toolbar-icon">
 
           <?php if(Auth::user()->authorizeRoles(['SuperAdmin', 'Admin'])): ?>
           <a href="<?php echo e(route('sale.create.type', $invoice->type)); ?>" title="Add Invoice" class="label label-info"><i class="fa fa-plus"></i></a>
           <?php endif; ?>
 
-          <a href="<?php echo e(route('sale.view.type', $invoice->type)); ?>" title="View sales" class="label label-success"><i class="fa fa-list"></i></a>
+          <a href="<?php echo e(route('sale.view.type', $invoice->type)); ?>" title="View" class="label label-success"><i class="fa fa-list"></i></a>
           
           <a href="<?php echo e(route('sale.invoice.print', $invoice->id)); ?>" title="Print" class="label label-info"><i class="fa fa-print"></i></a>
           
           <?php if(Auth::user()->authorizeRoles(['SuperAdmin', 'Admin'])): ?>
-          <a href="<?php echo e(route('sale.delete', $invoice->id)); ?>" class="label label-danger" onclick="return confirm('Are you sure you want to delete this item!');" title="Delete this item"><i class="fa fa-trash"></i></a>
+          <form action="<?php echo e(route('sale.destroy', $invoice->id)); ?>" method="POST" style="display: inline">
+            <?php echo csrf_field(); ?>
+            <?php echo method_field('DELETE'); ?>
+            <button type="submit" class="label label-danger" onclick="return confirm('Are you sure you want to delete this item!');" title="Delete this item"><i class="fa fa-trash"></i></button>
+          </form>
           <?php endif; ?>
         </div>
         <div class="col-md-12">
@@ -156,6 +160,18 @@ $source = New SourceCtrl;
                     <tr>
                       <th>Other Expense:</th>
                       <td><?php echo e($sale->other_expense); ?></td>
+                    </tr>
+                    <tr>
+                      <th>Client Price:</th>
+                      <td><?php echo e($sale->client_price); ?></td>
+                    </tr>
+                    <tr>
+                      <th>Purchase:</th>
+                      <td><?php echo e($sale->purchase); ?></td>
+                    </tr>
+                    <tr>
+                      <th>Profit:</th>
+                      <td><?php echo e($sale->profit); ?></td>
                     </tr>
                     <tr>
                       <th>VAT:</th>

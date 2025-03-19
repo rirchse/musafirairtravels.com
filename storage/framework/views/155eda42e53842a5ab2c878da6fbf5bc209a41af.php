@@ -24,8 +24,6 @@ $source = New SourceCtrl;
               <h3 class="box-title">List of Invoice</h3>
               <div class="box-tools">
                 <a href="<?php echo e(route('invoice.type.create', $type)); ?>" class="btn btn-info"><i class="fa fa-plus"></i> Create Invoice</a><br>
-
-                
               </div>
             </div>
             <!-- /.box-header -->

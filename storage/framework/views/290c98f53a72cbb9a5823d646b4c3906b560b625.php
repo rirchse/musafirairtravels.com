@@ -9,36 +9,76 @@ $source = New SourceCtrl;
 
 <style>
   .table-border tr td, .table-border tr th{border:1px solid #888!important; padding: 5px 10px}
+  .hide{display: none}
 </style>
 
 <div style="font-size:22px;text-align:center; margin-bottom:10px">
   <input type="hidden" value="<?php echo e($invoice->id); ?>" id="order_id">
   <a href="<?php echo e(route('payment.type.index', $invoice->user_type)); ?>" title="View" class="btn btn-success"><i class="fa fa-list"></i> View</a>
   <button href="#" title="Print" class="btn btn-info" onclick="document.title = '<?php echo e($invoice->name.'_'.$invoice->id); ?>'; printDiv();"><i class="fa fa-print"> Print</i></button>
+  <div class="clearfix"></div>
+  <div style="font-size:14px;margin-top:15px">
+    <button class="btn btn-danger" onclick="document.getElementById('office').remove()">x Remove Office Copy</button>
+  </div>
 </div>
 
-<table id="table" style="background: #fff; max-width:216mm; height:140mm; margin:0 auto;font-size:15px;">
-  <thead style="vertical-align:top">
+<div style="padding:25px; width:220mm; margin:0 auto">
+<table id="table" style="background: #fff; max-width:216mm; margin:0 auto; font-size:12px; padding:0">
     <tr>
-      <td style="padding:15px">
-        <table id="print" style="width:100%; border:0;">
+      <td style="padding:5px 10px">
+        
+        <?php echo $__env->make('layouts.print_header', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+
+        <table class="table">
           <tr>
-            <td style="width:40%">
-              <img src="<?php echo e(asset('img/logo_print.png')); ?>" alt="" style="width: 220px;vertical-align:top; margin-top:-20px">
+            <td colspan="2" style="text-align: center">
+              <div class="text-align:center; ">
+                <span style="font-size:20px;">MONEY RECEIPT
+                </span><br>
+                <span>(<?php echo e($invoice->user_type); ?> Copy)</span>
+            </div>
             </td>
-            <td>
-              <table>
+          </tr>
+          <tr>
+            <td style="padding:5px 15px">
+              <table class="table" style="margin-bottom:0">
                 <tr>
-                  <td>
-                    <img style="vertical-align:top" src="<?php echo e(asset('img/qrcode.png')); ?>" alt=""></td>
-                    <td>
-                      <div style="display: inline-block; padding-left:5px">
-                      <b style="font-size:20px">MUSAFIR TRAVELS</b><br>
-                      House-83/2-A,(2nd Floor), Matikata Main Road, Dhaka Cant, Dhaka-1206<br>
-                      <b>Mobile:</b> 01717055201, 01766089566</b><br>
-                      <b>Email:</b> musafirairtravels1@gmail.com
-                      </div>
-                    </td>
+                  <td>Receipt No. <span style="border-bottom:1px dotted">MR-00000<?php echo e($invoice->id); ?></span></td>
+                  <td style="text-align:right">Date: <span style="border-bottom:1px dotted"><?php echo e($source->dformat($invoice->date)); ?></span></td>
+                </tr>
+                <tr>
+                  <td colspan="2"> <span>Received with thanks from: </span><span style="border-bottom:1px dotted; display:inline-block; width:470px"> <?php echo e($invoice->user_name); ?></span> </td>
+                </tr>
+                <tr>
+                  <td colspan="2"> Amount in word: <span style="border-bottom:1px dotted; display:inline-block; width:535px"><span id="words"></span> BDT </span> </td>
+                </tr>
+                <tr>
+                  <td colspan="2">Payment For: <span style="border-bottom:1px dotted; display:inline-block; width:250px">Overall</span> Balance: <span style="border-bottom:1px dotted; display:inline-block; width:245px" id="balance"><?php echo e($invoice->balance); ?></span></td>
+                </tr>
+                <tr>
+                  <td colspan="2">Paid Via: <span style="border-bottom:1px dotted; display:inline-block; width:190px"><?php echo e($invoice->payment_by); ?></span> Account Name: <span style="border-bottom:1px dotted; display:inline-block; width:290px"><?php echo e($invoice->bank_name); ?></span></td>
+                </tr>
+                <tr>
+                  <td colspan="2"> For the purpose of: <span style="border-bottom:1px dotted; display:inline-block; width:518px"><?php echo e($invoice->details); ?></span> </td>
+                </tr>
+                <tr>
+                  <td><br>
+                    <span style="border:1px dotted; font-size:16px; padding:5px 10px">Amount of Taka: <span id="number"><?php echo e($invoice->amount); ?></span> BDT</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+
+        <table class="table" style="width: 100%">
+          <tr>
+            <td style="padding:25px 15px">
+              <table class="table" style="border:none; width:100%;margin-bottom:0">
+                <tr>
+                  <td style="text-align:left"><b style="border-top:1px dotted ">Customer Signature</b></td>
+                  
+                  <td style="text-align:right"><b style="border-top:1px dotted ">Authority Signature</b></td>
                 </tr>
               </table>
             </td>
@@ -46,85 +86,63 @@ $source = New SourceCtrl;
         </table>
       </td>
     </tr>
-  </thead>
-  <tbody style="vertical-align: top">
     <tr>
-      <td style="padding:15px">
-          <table style="width: 100%">
-            <tr>
-              <td colspan="2" style="text-align: center">
-                <div class="text-align:center; max-width:100px; margin: 0 auto">
-                  <span style="font-size:20px;">MONEY RECEIPT
-                  </span><br>
-                  <span>(Client Copy)</span>
-              </div>
-              </td>
-            </tr>
-          </table>
-          <table class="table">
-            <tr>
-              <td>Receipt No. <span style="border-bottom:1px dotted">MR-00000<?php echo e($invoice->id); ?></span></td>
-              <td style="text-align:right">Date: <span style="border-bottom:1px dotted"><?php echo e($source->dformat($invoice->date)); ?></span></td>
-            </tr>
-            <tr>
-              <td colspan="2"> <span>Received with thanks from: </span><span style="border-bottom:1px dotted; display:inline-block; width:550px"> <?php echo e($invoice->user_name); ?></span> </td>
-            </tr>
-            <tr>
-              <td colspan="2"> Amount in word: <span style="border-bottom:1px dotted; display:inline-block; width:622px"><span id="words"></span> BDT </span> </td>
-            </tr>
-            <tr>
-              <td colspan="2">Payment For: <span style="border-bottom:1px dotted; display:inline-block; width:278px">Overall</span> Balance: <span style="border-bottom:1px dotted; display:inline-block; width:300px" id="balance"><?php echo e($invoice->balance); ?></span></td>
-            </tr>
-            <tr>
-              <td colspan="2">Paid Via: <span style="border-bottom:1px dotted; display:inline-block; width:250px"><?php echo e($invoice->payment_by); ?></span> Account Name: <span style="border-bottom:1px dotted; display:inline-block; width:313px">MUSAFIR AIR TRAVELS</span></td>
-            </tr>
-            <tr>
-              <td colspan="2"> For the purpose of: <span style="border-bottom:1px dotted; display:inline-block; width:604px"><?php echo e($invoice->details); ?></span> </td>
-            </tr>
-            <tr>
-              <td><br>
-                <span style="border:1px dotted; font-size:18px;padding:5px 15px">Amount of Taka: <span id="number"><?php echo e($invoice->amount); ?></span> BDT</span>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-  </tbody>
-  <tfoot style="vertical-align: bottom">
-    <tr>
-      <td style="padding:15px">
-        <table class="table" style="border:none; width:100%;">
+      <td></td>
+    </tr>
+    <tr id="office">
+      <td>
+        
+        <?php echo $__env->make('layouts.print_header', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+
+        <table class="table">
           <tr>
-            <td style="text-align:left"><b style="border-top:1px dotted ">Customer Signature</b></td>
-            
-            <td style="text-align:right"><b style="border-top:1px dotted ">Authority Signature</b></td>
+            <td colspan="2" style="text-align: center">
+              <div class="text-align:center; ">
+                <span style="font-size:20px;">MONEY RECEIPT
+                </span><br>
+                <span>(Office Copy)</span>
+            </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:5px 15px">
+              <table class="table" style="margin-bottom:0">
+                <tr>
+                  <td>Receipt No. <span style="border-bottom:1px dotted">MR-00000<?php echo e($invoice->id); ?></span></td>
+                  <td style="text-align:right">Date: <span style="border-bottom:1px dotted"><?php echo e($source->dformat($invoice->date)); ?></span></td>
+                </tr>
+                <tr>
+                  <td colspan="2"> <span>Received with thanks from: </span><span style="border-bottom:1px dotted; display:inline-block; width:470px"> <?php echo e($invoice->user_name); ?></span> </td>
+                </tr>
+                <tr>
+                  <td colspan="2"> Amount in word: <span style="border-bottom:1px dotted; display:inline-block; width:535px"><span id="words2"></span> BDT </span> </td>
+                </tr>
+                <tr>
+                  <td colspan="2">Payment For: <span style="border-bottom:1px dotted; display:inline-block; width:250px">Overall</span> Balance: <span style="border-bottom:1px dotted; display:inline-block; width:245px" id="balance2"><?php echo e($invoice->balance); ?></span></td>
+                </tr>
+                <tr>
+                  <td colspan="2">Paid Via: <span style="border-bottom:1px dotted; display:inline-block; width:190px"><?php echo e($invoice->payment_by); ?></span> Account Name: <span style="border-bottom:1px dotted; display:inline-block; width:290px"><?php echo e($invoice->bank_name); ?></span></td>
+                </tr>
+                <tr>
+                  <td colspan="2"> For the purpose of: <span style="border-bottom:1px dotted; display:inline-block; width:518px"><?php echo e($invoice->details); ?></span> </td>
+                </tr>
+                <tr>
+                  <td><br>
+                    <span style="border:1px dotted; font-size:16px; padding:5px 10px">Amount of Taka: <span id="number"><?php echo e($invoice->amount); ?></span> BDT</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
           </tr>
         </table>
-      </td>
-    </tr>
-  </tfoot>
 
-  <thead style="vertical-align:top">
-    <tr>
-      <td style="padding:15px">
-        <table id="print" style="width:100%; border:0;">
+        <table class="table" style="width: 100%">
           <tr>
-            <td style="width:40%">
-              <img src="<?php echo e(asset('img/logo_print.png')); ?>" alt="" style="width: 220px;vertical-align:top; margin-top:-20px">
-            </td>
-            <td>
-              <table>
+            <td style="padding:35px 15px">
+              <table class="table" style="border:none; width:100%;margin-bottom:0">
                 <tr>
-                  <td>
-                    <img style="vertical-align:top" src="<?php echo e(asset('img/qrcode.png')); ?>" alt=""></td>
-                    <td>
-                      <div style="display: inline-block; padding-left:5px">
-                      <b style="font-size:20px">MUSAFIR TRAVELS</b><br>
-                      House-83/2-A,(2nd Floor), Matikata Main Road, Dhaka Cant, Dhaka-1206<br>
-                      <b>Mobile:</b> 01717055201, 01766089566</b><br>
-                      <b>Email:</b> musafirairtravels1@gmail.com
-                      </div>
-                    </td>
+                  <td style="text-align:left"><b style="border-top:1px dotted ">Customer Signature</b></td>
+                  <td style="text-align:right"><b style="border-top:1px dotted ">Authority Signature</b></td>
                 </tr>
               </table>
             </td>
@@ -132,65 +150,8 @@ $source = New SourceCtrl;
         </table>
       </td>
     </tr>
-  </thead>
-  <tbody style="vertical-align: top">
-    <tr>
-      <td style="padding:15px">
-          <table style="width: 100%">
-            <tr>
-              <td colspan="2" style="text-align: center">
-                <div class="text-align:center; max-width:100px; margin: 0 auto">
-                  <span style="font-size:20px;">MONEY RECEIPT
-                  </span><br>
-                  <span>(Client Copy)</span>
-              </div>
-              </td>
-            </tr>
-          </table>
-          <table class="table">
-            <tr>
-              <td>Receipt No. <span style="border-bottom:1px dotted">MR-00000<?php echo e($invoice->id); ?></span></td>
-              <td style="text-align:right">Date: <span style="border-bottom:1px dotted"><?php echo e($source->dformat($invoice->date)); ?></span></td>
-            </tr>
-            <tr>
-              <td colspan="2"> <span>Received with thanks from: </span><span style="border-bottom:1px dotted; display:inline-block; width:550px"> <?php echo e($invoice->user_name); ?></span> </td>
-            </tr>
-            <tr>
-              <td colspan="2"> Amount in word: <span style="border-bottom:1px dotted; display:inline-block; width:622px"><span id="words"></span> BDT </span> </td>
-            </tr>
-            <tr>
-              <td colspan="2">Payment For: <span style="border-bottom:1px dotted; display:inline-block; width:278px">Overall</span> Balance: <span style="border-bottom:1px dotted; display:inline-block; width:300px" id="balance"><?php echo e($invoice->balance); ?></span></td>
-            </tr>
-            <tr>
-              <td colspan="2">Paid Via: <span style="border-bottom:1px dotted; display:inline-block; width:250px"><?php echo e($invoice->payment_by); ?></span> Account Name: <span style="border-bottom:1px dotted; display:inline-block; width:313px">MUSAFIR AIR TRAVELS</span></td>
-            </tr>
-            <tr>
-              <td colspan="2"> For the purpose of: <span style="border-bottom:1px dotted; display:inline-block; width:604px"><?php echo e($invoice->details); ?></span> </td>
-            </tr>
-            <tr>
-              <td><br>
-                <span style="border:1px dotted; font-size:18px;padding:5px 15px">Amount of Taka: <span id="number"><?php echo e($invoice->amount); ?></span> BDT</span>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-  </tbody>
-  <tfoot style="vertical-align: bottom">
-    <tr>
-      <td style="padding:15px">
-        <table class="table" style="border:none; width:100%;">
-          <tr>
-            <td style="text-align:left"><b style="border-top:1px dotted ">Customer Signature</b></td>
-            
-            <td style="text-align:right"><b style="border-top:1px dotted ">Authority Signature</b></td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </tfoot>
-</table>
-
+  </table>
+</div>
 <script type="text/javascript">
 
 //js print a div
@@ -198,9 +159,9 @@ $source = New SourceCtrl;
     var divToPrint = document.getElementById('table');
     var htmlToPrint = '' +
         '<style type="text/css">' +
-        '.pageheader{font-size:15px}'+
-        'table { border-collapse:collapse; font-size:15px}' +
-        '.table tr th, .table tr td {padding:10px 0}' +
+        '.pageheader{font-size:13px}'+
+        'table { border-collapse:collapse; font-size:14px}' +
+        '.table tr th, .table tr td {padding:5px 0}' +
         '</style>';
     htmlToPrint += divToPrint.outerHTML;
     newWin = window.open(htmlToPrint);
@@ -230,6 +191,7 @@ $source = New SourceCtrl;
     var net_tota_tofixed = Number(net_total).toFixed();
     var in_words = inWords(net_tota_tofixed)
     document.getElementById('words').innerHTML = in_words;
+    document.getElementById('words2').innerHTML = in_words;
   };
   getWords();
 
@@ -237,13 +199,16 @@ $source = New SourceCtrl;
   function balance()
   {
     var balance = document.getElementById('balance');
+    var balance2 = document.getElementById('balance2');
     if(Number(balance.innerHTML) < 0)
     {
       balance.innerHTML = '<span style="color:red">Due '+balance.innerHTML.substring(1)+' BDT<span>';
+      balance2.innerHTML = '<span style="color:red">Due '+balance2.innerHTML.substring(1)+' BDT<span>';
     }
-    else
+    else if(Number(balance.innerHTML) > 0)
     {
       balance.innerHTML = '<span style="color:green">Adv '+balance.innerHTML+' BDT<span>';
+      balance2.innerHTML = '<span style="color:green">Adv '+balance2.innerHTML+' BDT<span>';
     }
     
   }

@@ -23,6 +23,16 @@ $source = New SourceCtrl;
           <div class="box">
             <div class="box-header">
               <h3 class="box-title">List of Vendor Accounts</h3>
+              <div class="box-tools">
+                <form action="{{route('vendor.search')}}" method="post" class="form-inline">
+                  @csrf
+                  <a href="{{route('vendor.create')}}" class="btn btn-info btn-sm"><i class="fa fa-plus"></i></a>
+                  <div class="input-group">
+                    <input type="text" name="search" placeholder="Name, Contact, Business Name">
+                    <span class="input-addon"><button><i class="fa fa-search"></i></button></span>
+                  </div>
+                </form>
+              </div>
             </div>
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">

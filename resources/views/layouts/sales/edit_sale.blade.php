@@ -8,7 +8,7 @@
     <li class="active">Invoice</li>
 </ol>
 </section>
-
+{{-- {{dd($client)}} --}}
 <!-- Main content -->
 <section class="content">
   <div class="row"> <!-- left column -->
@@ -24,6 +24,7 @@
                     <label class="control-label" for="search">Search Client</label>
                     <input class="form-control" id="search" type="text" placeholder="Search By Name, Email, Mobile, Ticket Number" onkeyup="searchClient(this)">
                 </div> --}}
+                @if($client)
                 <div id="clientInfo">
                     <table class="table">
                         <tr>
@@ -42,6 +43,7 @@
                         </tr>
                     </table>
                 </div>
+                @endif
             </div>
             <div class="clearfix"></div>
         </div>
@@ -344,6 +346,7 @@ function totalCalc()
     purchaseCalc();
     clientPriceCalc();
     profitCalc();
+    discCalc();
 }
 
 function taxCalc()
@@ -364,12 +367,12 @@ function CommCalc()
 
 function netCommCalc()
 {
-    net_commission.value = (Number(commission_amount.value) - Number(ait.value) - Number(other_expense.value) - Number(discount.value)).toFixed(2);
+    net_commission.value = (Number(commission_amount.value) - Number(ait.value) - Number(other_expense.value)).toFixed(2);
 }
 
 function purchaseCalc()
 {
-    purchase.value = (Number(gross_fare.value) - Number(net_commission.value)).toFixed(2);
+    purchase.value = (Number(gross_fare.value) - Number(net_commission.value) - Number(other_bonus.value)).toFixed(2);
 }
 
 function clientPriceCalc()
@@ -379,7 +382,7 @@ function clientPriceCalc()
 
 function profitCalc()
 {
-    profit.value = (Number(net_commission.value) + Number(other_bonus.value)).toFixed(2);
+    profit.value = (Number(net_commission.value) + Number(other_bonus.value) + Number(extra_fee.value) - Number(discount.value)).toFixed(2);
 }
     /** ----------------------------- Search Customer by ajax --------------- **/
     // var mobile = document.getElementById('mobile');

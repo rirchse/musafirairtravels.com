@@ -56,7 +56,7 @@ $source = New SourceCtrl;
                   <td><?php echo e($sale->purchase); ?></td>
                   <td>
                     <a href="<?php echo e(route('sale.show', $sale->invoice_id)); ?>" class="label label-info" title="Invoice details"><i class="fa fa-file-text"></i></a>
-                    <a href="<?php echo e(route('sale.edit',$sale->id)); ?>" class="label label-warning" title="Edit this sale"><i class="fa fa-edit"></i></a>
+                    <a href="<?php echo e(route('sale.edit',$sale->id)); ?>" class="label label-warning" title="Edit"><i class="fa fa-edit"></i></a>
                     
                   </td>
                 </tr>

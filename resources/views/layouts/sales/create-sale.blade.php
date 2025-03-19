@@ -69,7 +69,7 @@ if(isset($invoice))
             <div class="col-md-12">
                 <div class="form-group">
                     <label class="control-label" for="search">Search Client</label>
-                    <input class="form-control" id="search" type="text" placeholder="Search By Name, Email, Mobile, Ticket Number" onkeyup="searchClient(this)">
+                    <input class="form-control" id="search" type="text" placeholder="Search By Name, Email, Mobile, Ticket Number" onkeyup="searchClient(this)" required>
                 </div>
             </div>
             <div id="clientInfo">
@@ -105,7 +105,7 @@ if(isset($invoice))
             <div class="col-md-6">
                 <div class="form-group">
                     {{ Form::label('vendor_id', 'Vendor (*):', ['class' => 'control-label']) }}
-                    <select name="vendor_id" class="form-control">
+                    <select name="vendor_id" class="form-control select2">
                         <option value="">Select Vendor</option>
                         @foreach($vendors as $vendor)
                         <option value="{{$vendor->id}}" {{$vendor_id == $vendor->id? 'selected': ''}}>{{$vendor->name}}</option>
@@ -535,7 +535,8 @@ if(isset($invoice))
     @else
     client_price.addEventListener('keyup', clientProfitCalc);
     purchase.addEventListener('keyup', clientProfitCalc);
-    function clientProfitCalc(){
+    function clientProfitCalc()
+    {
         profit.value = client_price.value - purchase.value;
     }
     @endif
@@ -549,6 +550,7 @@ if(isset($invoice))
         purchaseCalc();
         clientPriceCalc();
         profitCalc();
+        discCalc();
     }
     
     function taxCalc()
@@ -569,12 +571,12 @@ if(isset($invoice))
 
     function netCommCalc()
     {
-        net_commission.value = (Number(commission_amount.value) - Number(ait.value) - Number(other_expense.value) - Number(discount.value)).toFixed(2);
+        net_commission.value = (Number(commission_amount.value) - Number(ait.value) - Number(other_expense.value)).toFixed(2);
     }
 
     function purchaseCalc()
     {
-        purchase.value = (Number(gross_fare.value) - Number(net_commission.value)).toFixed(2);
+        purchase.value = (Number(gross_fare.value) - Number(net_commission.value) - Number(other_bonus.value)).toFixed(2);
     }
 
     function clientPriceCalc()
@@ -584,7 +586,7 @@ if(isset($invoice))
 
     function profitCalc()
     {
-        profit.value = (Number(net_commission.value) + Number(other_bonus.value)).toFixed(2);
+        profit.value = (Number(net_commission.value) + Number(other_bonus.value) + Number(extra_fee.value) - Number(discount.value)).toFixed(2);
     }
 
     function checkTicketNo(e)
@@ -676,4 +678,12 @@ if(isset($invoice))
     }
     
 </script>
+@endsection
+@section('scripts')
+<script>
+    $(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
+    });
+  </script>
 @endsection

@@ -24,7 +24,7 @@ class CustomerCtrl extends Controller
      */
     public function index()
     {
-        $customers = Customer::latest()->get();
+        $customers = Customer::orderBy('id', 'DESC')->paginate(25);
         return view('layouts.customers.view_customer', compact('customers'));
     }
 
@@ -175,6 +175,25 @@ class CustomerCtrl extends Controller
         $customer->delete();
         Session::flash('success', 'Customer Successfully Delete');
         return redirect()->route('customer.index');
+    }
+
+    public function search(Request $request)
+    {
+        $data = $request->all();
+        if(isset($data['search']))
+        {
+            $customers = Customer::orderBy('id', 'DESC')
+            ->where('name', 'Like', '%'.$data['search'].'%')
+            ->orWhere('contact', 'Like', '%'.$data['search'].'%')
+            ->orWhere('email', 'Like', '%'.$data['search'].'%')
+            ->orWhere('passport_no', 'Like', '%'.$data['search'].'%')
+            ->paginate(25);
+            return view('layouts.customers.view_customer', compact('customers'));
+        }
+        else 
+        {
+           return $this->index();
+        }
     }
 
     /** Ajax Call: search clients/customers by name, mobile, email, ticket number */

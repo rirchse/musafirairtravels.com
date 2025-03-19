@@ -25,13 +25,13 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="name">Account Name</label>
-              <input type="text" name="name" id="name" class="form-control" placeholder="TBL, DBBL, Cash, bKash">
+              <input type="text" name="name" id="name" class="form-control" placeholder="TBL, DBBL, Cash, bKash" required>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label">Account Type:</label>
-              <select class="form-control" name="type">
+              <select class="form-control" name="type" required>
                 <option value="">Select One</option>
                 <option value="Cash">Cash</option>
                 <option value="Bank">Bank</option>

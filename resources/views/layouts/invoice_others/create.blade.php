@@ -25,7 +25,7 @@
             <div class="col-md-12">
                 <div class="form-group">
                     <label class="control-label" for="search">Search Client</label>
-                    <input class="form-control" id="search" type="text" placeholder="Search By Name, Email, Mobile, Ticket Number" onkeyup="searchClient(this)">
+                    <input class="form-control" id="search" type="text" placeholder="Search By Name, Email, Mobile, Ticket Number" onkeyup="searchClient(this)" required>
                 </div>
             </div>
             <div id="clientInfo">
@@ -80,13 +80,13 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="control-label" for="country">Country <span class="req">*</span></label>
-                    <select class="form-control" id="country" name="country" required></select>
+                    <select class="form-control select2" id="country" name="country" required></select>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="control-label" for="visa_type">VISA Type <span class="req">*</span></label>
-                    <select class="form-control" id="visa_type" name="visa_type" required>
+                    <select class="form-control select2" id="visa_type" name="visa_type" required>
                         <option value="">Select Type</option>
                         <option value="Employment visa">Employment visa</option>
                         <option value="Student visa">Student visa</option>
@@ -102,6 +102,7 @@
                     </select>
                 </div>
             </div>
+            <div class="clearfix"></div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="token">Token</label>
@@ -166,7 +167,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="vendor_id">Vendor</label>
-                    <select name="vendor_id" class="form-control">
+                    <select name="vendor_id" class="form-control select2">
                         <option value="">Select Vendor</option>
                         @foreach($vendors as $vendor)
                         <option value="{{$vendor->id}}">{{$vendor->name}}</option>
@@ -440,4 +441,12 @@
     }
     getCountries(document.getElementById('country'));
 </script>
+@endsection
+@section('scripts')
+<script>
+    $(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
+    });
+  </script>
 @endsection

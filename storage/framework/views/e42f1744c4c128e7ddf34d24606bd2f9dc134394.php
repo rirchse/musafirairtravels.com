@@ -25,11 +25,16 @@ $source = New SourceCtrl;
           </div>
           <div class="col-md-12 text-right toolbar-icon">
             <a href="<?php echo e(route('vendor.index')); ?>" title="View <?php echo e(Session::get('_types')); ?> vendors" class="label label-success"><i class="fa fa-list"></i></a>
-            <a href="<?php echo e(route('vendor.edit',$vendor->id)); ?>" class="label label-warning" title="Edit this vendor"><i class="fa fa-edit"></i></a>
+            <a href="<?php echo e(route('vendor.edit', $vendor->id)); ?>" class="label label-warning" title="Edit this vendor"><i class="fa fa-edit"></i></a>
             
-            
-            
-            
+
+            <?php if(Auth::user()->authorizeRoles(['SuperAdmin', 'Admin'])): ?>
+            <form action="<?php echo e(route('vendor.destroy', $vendor->id)); ?>" method="POST" style="display:inline">
+              <?php echo csrf_field(); ?>
+              <?php echo method_field('DELETE'); ?>
+              <button type="submit" class="label label-danger" onclick="return confirm('Are you sure want to delete this account!');" title="Delete this account"><i class="fa fa-trash"></i></button>
+            </form>
+            <?php endif; ?>            
           </div>
           <div class="col-md-12">
             <table class="table">

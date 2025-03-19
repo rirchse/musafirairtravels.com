@@ -179,24 +179,29 @@ class SaleCtrl extends Controller
     {
         if(Session::get('_sales'))
         {
-            $sales = Session::get('_sales');
-            $client_id = $sales[0]['customer_id'];
-            $vendor_id = $sales[0]['vendor_id'];
-            $type = $sales[0]['type'];
+            $sales      = Session::get('_sales');
+            $client_id  = $sales[0]['customer_id'];
+            $vendor_id  = $sales[0]['vendor_id'];
+            $type       = $sales[0]['type'];
+            $issue_date = $sales[0]['issue_date'];
 
             $purchase = $total_sale = $profit = $discount = 0;
             foreach($sales as $sale)
             {
-                $purchase += $sale['purchase'];
+                $purchase   += $sale['purchase'];
                 $total_sale += $sale['client_price'];
-                $profit += $sale['profit'];
+                $profit     += $sale['profit'];
             }
 
             DB::table('invoices')->insert([
-                'type' => $type,
-                'purchase' => $purchase,
-                'sale' => $total_sale,
-                'profit' => $profit
+                'type'       => $type,
+                'customer_id'=> $client_id,
+                'vendor_id'  => $vendor_id,
+                'purchase'   => $purchase,
+                'sale'       => $total_sale,
+                'profit'     => $profit,
+                'issue_date' => $issue_date,
+                'created_at' => date('Y-m-d H:i:s')
             ]);
 
             $invoice = DB::table('invoices')->orderBy('id', 'DESC')->latest()->first();
@@ -215,6 +220,30 @@ class SaleCtrl extends Controller
             $vendor = Vendor::find($vendor_id);
             Vendor::where('id', $vendor_id)->update(['amount' => $vendor->amount - $purchase]);
 
+            $report = new ReportCtrl;
+            //store client report
+            $report->storeReport([
+                'user_id' => $client_id,
+                'user_type' => 'Client',
+                'report_type' => $type,
+                'foreign_id' => $invoice->id,
+                'name' => $type.' Created',
+                'debit' => $total_sale,
+                'credit' => null,
+                'balance' => $client->amount - $total_sale,
+            ]);
+
+            //store vendor report
+            $report->storeReport([
+                'user_id' => $vendor_id,
+                'user_type' => 'Vendor',
+                'report_type' => $type,
+                'foreign_id' => $invoice->id,
+                'name' => $type.' Created',
+                'debit' => $purchase,
+                'credit' => null,
+                'balance' => $vendor->amount - $purchase,
+            ]);
 
             Session::forget('_sales');
 
@@ -247,7 +276,6 @@ class SaleCtrl extends Controller
         ->select('invoices.*', 'sales.type', 'customers.name', 'users.name as user_name')
         ->where('invoices.id', $id)->first();
         $sales = Sale::where('invoice_id', $invoice->id)->get();
-        // dd($invoice);
         return view('layouts.sales.print_sale', compact('invoice', 'sales'));
     }
 
@@ -269,10 +297,6 @@ class SaleCtrl extends Controller
      */
     public function store(Request $request)
     {
-        // $this->validate($request, [
-        //     'customer_name'     => 'required'
-        // ]);
-
         $data = $request->all();
         if(isset($data['_token']))
         {
@@ -304,7 +328,6 @@ class SaleCtrl extends Controller
         ->where('invoice_id', $id)
         ->select('sales.*', 'customers.name', 'customers.contact', 'customers.email', 'customers.passport_no', 'vendors.name as vendor_name')
         ->get();
-        // dd($invoice);
         return view('layouts.sales.read_sale', compact('invoice', 'sales'));
     }
 
@@ -316,10 +339,12 @@ class SaleCtrl extends Controller
      */
     public function edit($id)
     {
-        $sale = Sale::leftJoin('customers', 'customers.id', 'sales.customer_id')->select('sales.*', 'customers.name', 'customers.contact', 'customers.address')->find($id);
+        $sale = Sale::leftJoin('customers', 'customers.id', 'sales.customer_id')
+        ->select('sales.*', 'customers.name', 'customers.contact', 'customers.address')->find($id);
         $type = $sale->type;
         $vendors = Vendor::orderBy('id', 'DESC')->where('status', 'Active')->get();
         $client = Customer::find($sale->customer_id);
+        // dd($client);
         return view('layouts.sales.edit_sale', compact('sale', 'type', 'vendors', 'client'));
     }
 
@@ -332,10 +357,6 @@ class SaleCtrl extends Controller
      */
     public function update(Request $request, $id)
     {
-        // $this->validate($request, [
-        //     'customer_name' => 'required',
-        // ]);
-
         $data = $request->all();
 
         if(isset($data['_token']))
@@ -385,8 +406,6 @@ class SaleCtrl extends Controller
         $data['customer_id'] = $sale->customer_id;
 
         $type = $data['type'];
-        
-        // dd($data);
 
         Sale::insert($data);
         Sale::where('id', $id)->update(['status' => 'Cancelled']);
@@ -416,10 +435,15 @@ class SaleCtrl extends Controller
      */
     public function destroy($id)
     {
-        $sale = Sale::find($id);
-        $sale->delete();
+        $type = '';
+        $sales = Sale::where('invoice_id', $id)->get();
+        foreach($sales as $sale)
+        {
+            $type = $sale->type;
+            $sale->delete();
+        }
         Session::flash('success', 'The invoice successfully deleted.');
-        return redirect()->route('sale.view.type', $sale->type);
+        return redirect()->route('sale.view.type', $type);
     }
 
     public function print($id)
@@ -493,19 +517,48 @@ class SaleCtrl extends Controller
             unset($data['_token']);
         }
 
+        $type = $data['type'];
+
         InvoiceOther::insert($data);
+        $invoice = InvoiceOther::orderBy('id', 'DESC')->first();
+
+        $report = new ReportCtrl;
 
         /** update client balance */
         if(isset($data['client_id']))
         {
             $client = Customer::find($data['client_id']);
             Customer::where('id', $data['client_id'])->update(['amount' => $client->amount - $data['total_sale']]);
+
+            //store client report
+            $report->storeReport([
+                'user_id'     => $client->id,
+                'user_type'   => 'Client',
+                'report_type' => $type,
+                'foreign_id'  => $invoice->id,
+                'name'        => 'Invoice '.$type.' Created',
+                'debit'       => $data['total_sale'],
+                'credit'      => null,
+                'balance'     => $client->amount - $data['total_sale'],
+            ]);
         }
         /** update vendor balance */
         if(isset($data['vendor_id']))
         {
             $vendor = Vendor::find($data['vendor_id']);
             Vendor::where('id', $data['vendor_id'])->update(['amount' => $vendor->amount - $data['cost_price']]);
+
+            //store vendor report
+            $report->storeReport([
+                'user_id'     => $vendor->id,
+                'user_type'   => 'Vendor',
+                'report_type' => $type,
+                'foreign_id'  => $invoice->id,
+                'name'        => 'Invoice '.$type.' Created',
+                'debit'       => $data['cost_price'],
+                'credit'      => null,
+                'balance'     => $vendor->amount - $data['cost_price'],
+            ]);
         }
 
         Session::flash('success', 'Invoice successfully saved.');
@@ -518,7 +571,6 @@ class SaleCtrl extends Controller
         ->leftJoin('vendors', 'vendors.id', 'invoice_others.vendor_id')
         ->select('invoice_others.*', 'customers.name as client_name', 'vendors.name as vendor_name')
         ->find($id);
-        // dd($invoice);
         return view('layouts.invoice_others.read', compact('invoice'));
     }
 
@@ -543,7 +595,6 @@ class SaleCtrl extends Controller
         {
             unset($data['_method']);
         }
-        // dd($data);
         InvoiceOther::where('id', $id)->update($data);
         Session::flash('success', 'The invoice successfully udpated.');
         return redirect()->route('invoice.show', $id);
@@ -592,4 +643,14 @@ class SaleCtrl extends Controller
         ->select('sales.*', 'vendors.name as vendor_name')->find($id);
         return response()->json(['ticket' => $ticket], 200);
     }
+
+    /** temp invoice update */
+    // public function tempInvoiceUpdate()
+    // {
+    //     $sales = Sale::all();
+    //     foreach($sales as $val)
+    //     {
+    //         Invoice::where('id', $val->invoice_id)->update(['customer_id' => $val->customer_id, 'vendor_id' => $val->vendor_id]);
+    //     }
+    // }
 }

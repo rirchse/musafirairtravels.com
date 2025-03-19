@@ -52,11 +52,11 @@ class VendorCtrl extends Controller
         $data = $request->all();
         // dd($data);
         
-    //    $this->validate($request, [
-    //         'name'              => 'required|max:255',
-    //         'business_name'     => 'required|max:255',
-    //         'contact'           => 'required|max:11',            
-    //     ]);
+       $this->validate($request, [
+            'name'              => 'required|max:255',
+            'business_name'     => 'required|max:255',
+            'contact'           => 'required|max:18',            
+        ]);
         $vendor_id = 0;
 
         if(isset($data['_token']))
@@ -118,7 +118,7 @@ class VendorCtrl extends Controller
         $this->validate($request, [
             'name'              => 'required|max:255',
             'business_name'     => 'required|max:255',
-            'contact'           => 'required|max:11',            
+            'contact'           => 'required|max:18',            
         ]);
         
         $data = $request->all();
@@ -157,8 +157,29 @@ class VendorCtrl extends Controller
                 File::delete('img/vendor/' .$vendor->image);
             }
             $vendor->delete();
-        Session::flash('success', 'Vendor Successfully Delete');
+        Session::flash('success', 'Vendor Successfully Deleted');
         return redirect()->route('vendor.index');
+    }
+
+
+    /** other required methods */
+    public function search(Request $request)
+    {
+        $data = $request->all();
+        if(isset($data['search']))
+        {
+            $vendors = Vendor::orderBy('id', 'DESC')
+            ->where('name', 'Like', '%'.$data['search'].'%')
+            ->orWhere('contact', 'Like', '%'.$data['search'].'%')
+            ->orWhere('email', 'Like', '%'.$data['search'].'%')
+            ->orWhere('business_name', 'Like', '%'.$data['search'].'%')
+            ->paginate(25);
+            return view('layouts.vendors.view_vendor', compact('vendors'));
+        }
+        else 
+        {
+           return $this->index();
+        }
     }
     
 }

@@ -40,7 +40,7 @@ Route::get('/home', 'HomeCtrl@index')->name('home');
 	Route::get('/change_password', 'UserCtrl@changePassword')->name('user.password.change');
 	Route::put('/change_password', 'UserCtrl@updatePassword')->name('user.change.password');
 
-//=================================CASTOM ROUTE END ==========================
+//=================== CASTOM ROUTE END ==========================
 	
 	//user routes
 	Route::resource('/user', 'UserCtrl');
@@ -50,11 +50,19 @@ Route::get('/home', 'HomeCtrl@index')->name('home');
 	Route::get('/get_sub_cats/{catid}', 'SubCategoryCtrl@subCats');
 
 	Route::resource('/vendor', 'VendorCtrl');
+	Route::post('/vendor/search', 'VendorCtrl@search')->name('vendor.search');
 	Route::resource('/product', 'ProductCtrl');
+
+	/** expence routes */
 	Route::resource('/expense', 'ExpenseCtrl');
+	Route::get('/expense_tracking', 'ExpenseCtrl@tracking')->name('expense.track');
+	Route::post('/expense_tracking', 'ExpenseCtrl@earningPost')->name('earning.post');
+	Route::post('/expense_filter', 'ExpenseCtrl@filter')->name('expense.filter');
+	
 	Route::resource('/customer', 'CustomerCtrl');
 	Route::get('/search/customer/{value}', 'CustomerCtrl@searchCustomer');
 	Route::post('/search/customer', 'CustomerCtrl@searchCustomer')->name('customer.search');
+	Route::post('/customer/search', 'CustomerCtrl@search')->name('search.customer');
 	Route::resource('/sale', 'SaleCtrl');
 	// Route::get('/sale/{customer}/product', 'SaleCtrl@saleProduct');
 	Route::get('/sale/{id}/print', 'SaleCtrl@print');
@@ -127,3 +135,21 @@ Route::get('/home', 'HomeCtrl@index')->name('home');
 	Route::get('/get_balance/{id}', 'AccountCtrl@getBalance');
 	Route::get('/account_', 'AccountCtrl@statement')->name('account.statement');
 	Route::post('/account_', 'AccountCtrl@getStatement')->name('account.post');
+	Route::get('/fund_transfer/{id}', 'AccountCtrl@fundTransfer')->name('fund.transfer.create');
+	Route::post('/fund_transfer', 'AccountCtrl@fundTransferStore')->name('fund.transfer.store');
+	Route::get('/fund_transfer', 'AccountCtrl@fundTransferIndex')->name('fund.transfer.index');
+
+	/** reports	 */
+	Route::get('/report', 'ReportCtrl@create')->name('report.create');
+	Route::post('/report', 'ReportCtrl@index')->name('report.post');
+	Route::get('/sales_report', 'ReportCtrl@saleCreate')->name('report.sale');
+	Route::post('/sales_report', 'ReportCtrl@saleIndex')->name('report.sale.post');
+	Route::get('/client_report', 'ReportCtrl@clientReport')->name('report.client');
+	Route::post('/client_report', 'ReportCtrl@clientPost')->name('report.client.post');
+	Route::get('/vendor_report', 'ReportCtrl@vendorReport')->name('report.vendor');
+	Route::post('/vendor_report', 'ReportCtrl@vendorPost')->name('report.vendor.post');
+
+	// Route::get('/report_create_test', 'ReportCtrl@reportTest');
+
+	/** temp invoice update */
+	// Route::get('/temp_report_update', 'ReportCtrl@tempReportUpdate');
