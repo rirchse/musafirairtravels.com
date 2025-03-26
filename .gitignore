@@ -1,8 +1,10 @@
 /node_modules
+/bootstrap/cache
 /public/hot
 /public/storage
 /storage/*.key
 /storage
+/storage/framework/views
 /vendor
 .env
 .env.backup

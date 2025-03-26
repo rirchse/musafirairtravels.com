@@ -74,7 +74,20 @@ if(isset($invoice))
             </div>
             <div id="clientInfo">
                 @if(isset($client))
-                <table class="table"><tr><th>Client Name</th><th>Contact</th><th>Email</th><th>Ticket No.</th></tr><tr><td>{{$client->name}}</td><td>{{$client->contact}}</td><td>{{$client->email}}</td><td>{{$client->ticket_no}}</td></tr></table>
+                <table class="table">
+                    <tr>
+                        <th>Client Name</th>
+                        <th>Contact</th>
+                        <th>Email</th>
+                        <th>Ticket No.</th>
+                    </tr>
+                    <tr>
+                        <td>{{$client->name}}</td>
+                        <td>{{$client->contact}}</td>
+                        <td>{{$client->email}}</td>
+                        <td>{{$client->ticket_no}}</td>
+                    </tr>
+                </table>
                 @endif
             </div>
             <div class="clearfix"></div>
@@ -615,17 +628,20 @@ if(isset($invoice))
 
     function searchClient(e)
     {
+        let timeout = null;
         var search = document.getElementById('search');
         var clientInfo = document.getElementById('clientInfo');
         var customer_id = document.getElementById('customer_id');
         if(e.value.length >= 3)
         {
-            setTimeout(() => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
                 $.ajax({
                     type: 'GET', //THIS NEEDS TO BE GET
                     url: '/search/customer/'+e.value,
                     success: function (data) {
                         var obj = JSON.parse(JSON.stringify(data));
+                        // console.log(data.data);
 
                         var client = obj['data'];
                         if(client)

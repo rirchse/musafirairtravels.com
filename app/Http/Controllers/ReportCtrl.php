@@ -69,11 +69,23 @@ class ReportCtrl extends Controller
 
     if($start_date && $end_date)
     {
-      $sales = $sales->whereRaw('DATE(sales.created_at) >= ?', [$start_date])
-      ->whereRaw('DATE(sales.created_at) <= ?', [$end_date]);
+      $sales = $sales->whereRaw('DATE(sales.issue_date) >= ?', [$start_date])
+      ->whereRaw('DATE(sales.issue_date) <= ?', [$end_date]);
     }
 
-    $sales = $sales->select('sales.*', 'customers.name as client_name', 'vendors.name as vendor_name')->get();
+    $sales = $sales->select(
+      'issue_date',
+      'sales.type',
+      'sales.airline',
+      'ticket_no',
+      'client_price',
+      'purchase',
+      'profit',
+      'customers.name as client_name',
+      'vendors.name as vendor_name'
+      )->get();
+
+    // dd($sales);
 
     return view('layouts.reports.index', compact('sales', 'airlines','vendors','customers'));
   }

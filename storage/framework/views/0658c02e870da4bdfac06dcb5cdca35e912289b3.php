@@ -32,7 +32,7 @@ $source = New SourceCtrl;
           
           
           <?php if(Auth::user()->authorizeRoles(['SuperAdmin', 'Admin'])): ?>
-          
+          <a href="<?php echo e(route('sale.refund.delete',$refund->id)); ?>" class="label label-danger" onclick="return confirm('Are you sure you want to delete this item!');" title="Delete this item"><i class="fa fa-trash"></i></a>
           <?php endif; ?>
         </div>
         <div class="clearfix"></div>

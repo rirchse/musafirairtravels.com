@@ -32,7 +32,7 @@ $source = New SourceCtrl;
           {{-- <a href="{{route('sale.edit',$refund->id)}}" class="label label-warning" title="Edit"><i class="fa fa-edit"></i></a> --}}
           
           @if(Auth::user()->authorizeRoles(['SuperAdmin', 'Admin']))
-          {{-- <a href="{{route('sale.refund.delete',$refund->id)}}" class="label label-danger" onclick="return confirm('Are you sure you want to delete this item!');" title="Delete this item"><i class="fa fa-trash"></i></a> --}}
+          <a href="{{route('sale.refund.delete',$refund->id)}}" class="label label-danger" onclick="return confirm('Are you sure you want to delete this item!');" title="Delete this item"><i class="fa fa-trash"></i></a>
           @endif
         </div>
         <div class="clearfix"></div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Refund;
 use App\RefundItem;
+use App\Invoice;
 use App\Sale;
 use App\Customer;
 use App\Vendor;
@@ -103,6 +104,7 @@ class RefundCtrl extends Controller
       $sale = Sale::find($data['sale_ids'][0]);
       $client = Customer::find($sale->customer_id);
       $vendor = Vendor::find($sale->vendor_id);
+
       $report = new ReportCtrl;
 
       if(isset($client))
@@ -126,7 +128,9 @@ class RefundCtrl extends Controller
       if(isset($vendor))
       {
         /** update vendor balance */
-        Vendor::where('id', $sale->vendor_id)->update(['amount' => $vendor->amount + ($total_purchase - $vendor_charge) ]);
+        Vendor::where('id', $sale->vendor_id)->update([
+          'amount' => $vendor->amount + ($total_purchase - $vendor_charge) 
+        ]);
   
         /** store vendor report */
         $report->storeReport([
@@ -156,15 +160,35 @@ class RefundCtrl extends Controller
         ->where('refund_items.refund_id', $id)
         ->select('refund_items.*', 'sales.client_price', 'sales.purchase')
         ->get();
-        // dd($items);
+        
         return view('layouts.refunds.refund_read', compact('refund', 'items'));
     }
 
     public function refundDelete($id)
     {
-        $refund = Refund::find($id);
-        $refund->delete();
-        Session::flash('success', 'The refund successfully deleted.');
-        return redirect()->route('sale.refund.index');
+      $refund_item = RefundItem::find($id);
+      $refund = Refund::find($refund_item->refund_id);
+      $sale = Sale::select('id', 'client_price', 'purchase')->find($refund_item->sale_id);
+      $client = Customer::find($refund->client_id);
+      $vendor = Vendor::find($refund->vendor_id);
+
+      try{
+        Customer::where('id', $client->id)->update([
+          'amount' => $client->balance - ($sale->client_price - $refund_item->client_charge) 
+        ]);
+
+        Vendor::where('id', $vendor->id)->update([
+          'amount' => $vendor->amount - ($sale->purchase - $refund_item->vendor_charge)
+        ]);
+
+        $refund_item->delete();
+      }
+      catch(\Exception $e)
+      {
+        return $e->getMessage();
+      }
+
+      Session::flash('success', 'The refund successfully deleted.');
+      return redirect()->route('sale.refund.index');
     }
 }

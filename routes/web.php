@@ -22,7 +22,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeCtrl@index')->name('home');
 
-//=================================CASTOM ROUTE===============================
+//============== CASTOM ROUTE ============
 	Route::get('/user/delete/{id}','UserCtrl@destroy')->name('user.delete');
 	Route::get('/category/delete/{id}','CategoryCtrl@destroy')->name('category.delete');
 	Route::get('/sub_category/delete/{id}','SubCategoryCtrl@destroy')->name('sub_category.delete');

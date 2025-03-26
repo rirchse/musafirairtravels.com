@@ -26,7 +26,7 @@
             <div class="col-md-12">
                 <div class="form-group">
                     <label class="control-label" for="search">Search Client</label>
-                    <input class="form-control" id="search" type="text" placeholder="Search By Name, Email, Mobile, Ticket Number" onkeyup="searchClient(this)">
+                    <input class="form-control" id="search" type="text" placeholder="Search By Name, Email, Mobile, Ticket Number" onkeyup="searchClient(this)" required>
                 </div>
             </div>
             <div id="clientInfo">

@@ -144,7 +144,7 @@ if(isset($data))
                 @endphp
 
                 <tr>
-                  <td>{{$source->dformat($val->created_at)}}</td>
+                  <td>{{$source->dformat($val->issue_date)}}</td>
                   <td>{{$val->type}}</td>
                   <td>{{$val->vendor_name}}</td>
                   <td>{{$val->airline}}</td>

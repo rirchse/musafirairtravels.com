@@ -205,7 +205,9 @@ class CustomerCtrl extends Controller
         ->orWhere('customers.email', 'like', '%'.$value.'%')
         ->orWhere('sales.ticket_no', 'like', '%'.$value.'%')
         ->select('customers.id', 'customers.name', 'customers.contact', 'customers.email', 'sales.ticket_no', 'customers.amount')
+        // ->limit(10)
         ->first();
+
         return response()->json([
             'data' => $customer
         ]);

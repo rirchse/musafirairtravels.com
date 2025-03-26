@@ -231,6 +231,7 @@ class SaleCtrl extends Controller
                 'debit' => $total_sale,
                 'credit' => null,
                 'balance' => $client->amount - $total_sale,
+                'created_at' => $issue_date
             ]);
 
             //store vendor report
@@ -243,6 +244,7 @@ class SaleCtrl extends Controller
                 'debit' => $purchase,
                 'credit' => null,
                 'balance' => $vendor->amount - $purchase,
+                'created_at' => $issue_date
             ]);
 
             Session::forget('_sales');
@@ -540,6 +542,7 @@ class SaleCtrl extends Controller
                 'debit'       => $data['total_sale'],
                 'credit'      => null,
                 'balance'     => $client->amount - $data['total_sale'],
+                'created_at' => $data['delivery']
             ]);
         }
         /** update vendor balance */
@@ -558,6 +561,7 @@ class SaleCtrl extends Controller
                 'debit'       => $data['cost_price'],
                 'credit'      => null,
                 'balance'     => $vendor->amount - $data['cost_price'],
+                'created_at' => $data['delivery']
             ]);
         }
 
@@ -619,7 +623,9 @@ class SaleCtrl extends Controller
     /** ajax call */
     public function searchClients($name)
     {
-        $clients = Customer::where('name', 'like', '%'.$name.'%')->get();
+        $clients = Customer::where('name', 'like', '%'.$name.'%')
+        ->limit(10)
+        ->get();
         return response()->json(['data' => $clients], 200);
     }
 
@@ -640,8 +646,12 @@ class SaleCtrl extends Controller
     public function getTicket($id)
     {
         $ticket = Sale::leftJoin('vendors', 'vendors.id', 'sales.vendor_id')
-        ->select('sales.*', 'vendors.name as vendor_name')->find($id);
-        return response()->json(['ticket' => $ticket], 200);
+        ->select('sales.*', 'vendors.name as vendor_name')
+        ->find($id);
+
+        return response()->json([
+            'ticket' => $ticket
+        ], 200);
     }
 
     /** temp invoice update */
