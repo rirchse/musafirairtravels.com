@@ -38,6 +38,31 @@ $source = New SourceCtrl;
         <div class="clearfix"></div>
       </div>
   </div>
+  <div class="col-md-12">
+    <div class="box">
+      <table class="table">
+        <tr>
+          <?php if($client): ?>
+            <th colspan="4">
+              <h4>Client Information</h4>
+              Name: <?php echo e($client->name); ?> <br>
+              Contact: <?php echo e($client->contact); ?> <br>
+              Email: <?php echo e($client->email); ?> <br>
+            </th>
+          <?php endif; ?>
+          <?php if($vendor): ?>
+            <th colspan="4">
+              <h4>Vendor Information</h4>
+              Name: <?php echo e($vendor->name); ?> <br>
+              Contact: <?php echo e($vendor->contact); ?> <br>
+              Email: <?php echo e($vendor->email); ?> <br>
+            </th>
+          <?php endif; ?>
+        </tr>
+      </table>
+    </div>
+    <br>
+  </div>
     <div class="col-md-6">
       <div class="box box-info">
         <table class="table">

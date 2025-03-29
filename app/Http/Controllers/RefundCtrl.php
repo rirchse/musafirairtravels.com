@@ -151,17 +151,21 @@ class RefundCtrl extends Controller
 
     public function refundShow($id)
     {
-        $refund = Refund::leftJoin('customers', 'customers.id', 'refunds.client_id')
-        ->leftJoin('vendors', 'vendors.id', 'refunds.vendor_id')
-        ->select('refunds.*', 'customers.name as client_name', 'vendors.name as vendor_name')
-        ->find($id);
+        $refund = Refund::find($id);
+        // leftJoin('customers', 'customers.id', 'refunds.client_id')
+        // ->leftJoin('vendors', 'vendors.id', 'refunds.vendor_id')
+        // ->select('refunds.*', 'customers.name as client_name', 'vendors.name as vendor_name')
+        // ->find($id);
+
+        $client = Customer::find($refund->client_id);
+        $vendor = Vendor::find($refund->vendor_id);
 
         $items = RefundItem::leftJoin('sales', 'sales.id', 'refund_items.sale_id')
         ->where('refund_items.refund_id', $id)
         ->select('refund_items.*', 'sales.client_price', 'sales.purchase')
         ->get();
         
-        return view('layouts.refunds.refund_read', compact('refund', 'items'));
+        return view('layouts.refunds.refund_read', compact('refund', 'items', 'client', 'vendor'));
     }
 
     public function refundDelete($id)

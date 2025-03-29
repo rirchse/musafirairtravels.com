@@ -38,6 +38,31 @@ $source = New SourceCtrl;
         <div class="clearfix"></div>
       </div>
   </div>
+  <div class="col-md-12">
+    <div class="box">
+      <table class="table">
+        <tr>
+          @if($client)
+            <th colspan="4">
+              <h4>Client Information</h4>
+              Name: {{$client->name}} <br>
+              Contact: {{$client->contact}} <br>
+              Email: {{$client->email}} <br>
+            </th>
+          @endif
+          @if($vendor)
+            <th colspan="4">
+              <h4>Vendor Information</h4>
+              Name: {{$vendor->name}} <br>
+              Contact: {{$vendor->contact}} <br>
+              Email: {{$vendor->email}} <br>
+            </th>
+          @endif
+        </tr>
+      </table>
+    </div>
+    <br>
+  </div>
     <div class="col-md-6">
       <div class="box box-info">
         <table class="table">
