@@ -438,12 +438,27 @@ class SaleCtrl extends Controller
     public function destroy($id)
     {
         $type = '';
+        $invoice = Invoice::find($id);
         $sales = Sale::where('invoice_id', $id)->get();
-        foreach($sales as $sale)
-        {
-            $type = $sale->type;
-            $sale->delete();
+        try {
+            foreach($sales as $sale)
+            {
+                $type = $sale->type;
+                $sale->delete();
+            }
+
+            //update client balance
+            Customer::where('id', $invoice->customer_id)->increment('amount', $invoice->sale);
+
+            //update vendor balance
+            Vendor::where('id', $invoice->vendor_id)->increment('amount', $invoice->purchase);
+
+            //finally delete the invoice
+            // $invoice->delete();
+        }catch(\Exception $e) {
+            return $e->getMessage();
         }
+        
         Session::flash('success', 'The invoice successfully deleted.');
         return redirect()->route('sale.view.type', $type);
     }
@@ -653,14 +668,4 @@ class SaleCtrl extends Controller
             'ticket' => $ticket
         ], 200);
     }
-
-    /** temp invoice update */
-    // public function tempInvoiceUpdate()
-    // {
-    //     $sales = Sale::all();
-    //     foreach($sales as $val)
-    //     {
-    //         Invoice::where('id', $val->invoice_id)->update(['customer_id' => $val->customer_id, 'vendor_id' => $val->vendor_id]);
-    //     }
-    // }
 }

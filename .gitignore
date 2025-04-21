@@ -2,6 +2,7 @@
 /bootstrap/cache
 /public/hot
 /public/storage
+/public/uploads
 /storage/*.key
 /storage
 /storage/framework/views
