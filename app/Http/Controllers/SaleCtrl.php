@@ -454,7 +454,7 @@ class SaleCtrl extends Controller
             Vendor::where('id', $invoice->vendor_id)->increment('amount', $invoice->purchase);
 
             //finally delete the invoice
-            // $invoice->delete();
+            $invoice->delete();
         }catch(\Exception $e) {
             return $e->getMessage();
         }
@@ -557,7 +557,7 @@ class SaleCtrl extends Controller
                 'debit'       => $data['total_sale'],
                 'credit'      => null,
                 'balance'     => $client->amount - $data['total_sale'],
-                'created_at' => $data['delivery']
+                'created_at' => isset($data['delivery']) ? $data['delivery'] : date('Y-m-d H:i:s')
             ]);
         }
         /** update vendor balance */
@@ -576,7 +576,7 @@ class SaleCtrl extends Controller
                 'debit'       => $data['cost_price'],
                 'credit'      => null,
                 'balance'     => $vendor->amount - $data['cost_price'],
-                'created_at' => $data['delivery']
+                'created_at' => isset($data['delivery']) ? $data['delivery'] : date('Y-m-d H:i:s')
             ]);
         }
 
