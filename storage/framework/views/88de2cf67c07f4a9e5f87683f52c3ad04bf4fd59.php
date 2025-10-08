@@ -112,6 +112,10 @@ $sale = $invoice;
                 <td><?php echo e($sale->profit); ?></td>
               </tr>
               <tr>
+                <th>Issue Date:</th>
+                <td><?php echo e($sale->issue_date); ?> </td>
+              </tr>
+              <tr>
                 <th>Vendor:</th>
                 <td><?php echo e($sale->vendor_name); ?> </td>
               </tr>

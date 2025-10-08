@@ -112,6 +112,10 @@ $sale = $invoice;
                 <td>{{$sale->profit}}</td>
               </tr>
               <tr>
+                <th>Issue Date:</th>
+                <td>{{$sale->issue_date}} </td>
+              </tr>
+              <tr>
                 <th>Vendor:</th>
                 <td>{{$sale->vendor_name}} </td>
               </tr>

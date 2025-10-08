@@ -177,6 +177,12 @@
                     </select>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="control-label" for="issue_date">Issue Date</label>
+                    <input class="form-control" id="issue_date" type="date" name="issue_date" value="<?php echo e($invoice->issue_date); ?>">
+                </div>
+            </div>
             <div class="col-md-12">
                 <div class="form-group">
                     <label class="control-label" for="details">Details</label>
