@@ -30,12 +30,6 @@ Route::get('/home', 'HomeCtrl@index')->name('home');
 	Route::get('/product/delete/{id}','ProductCtrl@destroy')->name('product.delete');
 	Route::get('/customer/delete/{id}','CustomerCtrl@destroy')->name('customer.delete');
 
-
-	// Route::get('/payment/{id}/get', 'PaymentCtrl@getPayment')->name('get.payment');
-	// Route::get('/payment/{id}/index', 'PaymentCtrl@index')->name('index.payment');
-	// Route::get('/payment/{id}/read', 'PaymentCtrl@show')->name('show.payment');
-	// Route::get('/payment/{id}/delete','PaymentCtrl@destroy')->name('payment.delete');
-
 	//password change
 	Route::get('/change_password', 'UserCtrl@changePassword')->name('user.password.change');
 	Route::put('/change_password', 'UserCtrl@updatePassword')->name('user.change.password');
@@ -63,8 +57,9 @@ Route::get('/home', 'HomeCtrl@index')->name('home');
 	Route::get('/search/customer/{value}', 'CustomerCtrl@searchCustomer');
 	Route::post('/search/customer', 'CustomerCtrl@searchCustomer')->name('customer.search');
 	Route::post('/customer/search', 'CustomerCtrl@search')->name('search.customer');
+  
+  //sales/invoice profit & not-profit
 	Route::resource('/sale', 'SaleCtrl');
-	// Route::get('/sale/{customer}/product', 'SaleCtrl@saleProduct');
 	Route::get('/sale/{id}/print', 'SaleCtrl@print');
 	Route::get('/sale/delete/{id}','SaleCtrl@destroy')->name('sale.delete');
 	Route::get('/search/orders/{value}', 'SaleCtrl@search');
@@ -148,8 +143,3 @@ Route::get('/home', 'HomeCtrl@index')->name('home');
 	Route::post('/client_report', 'ReportCtrl@clientPost')->name('report.client.post');
 	Route::get('/vendor_report', 'ReportCtrl@vendorReport')->name('report.vendor');
 	Route::post('/vendor_report', 'ReportCtrl@vendorPost')->name('report.vendor.post');
-
-	// Route::get('/report_create_test', 'ReportCtrl@reportTest');
-
-	/** temp invoice update */
-	// Route::get('/temp_report_update', 'ReportCtrl@tempReportUpdate');

@@ -113,8 +113,6 @@ $source = New SourceCtrl;
             </table>
           </div>
           <div class="clearfix"></div>
-
-          {{-- <p><a href="{{route('expense.delete', $expense->id)}}" onclick="return confirm('Are sure you want to permanently delete this vendor?')" class="text-danger" style="padding:15px">Permanently Remove?</a></p> --}}
         </div>
       </div><!-- /.box -->
     </div><!--/.col (left) -->

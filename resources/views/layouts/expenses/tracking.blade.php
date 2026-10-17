@@ -82,8 +82,6 @@ if(isset($data['start_date']) && isset($data['end_date']))
             <h4 class="box-title" style="">Expense Details</h4>
           </div>
           <div class="col-md-12 text-right toolbar-icon">
-            {{-- <a href="{{route('expense.index')}}" title="View {{Session::get('_types')}} expenses" class="label label-success"><i class="fa fa-list"></i></a> --}}
-            {{-- <a href="#" title="Print" class="label label-info"><i class="fa fa-print"></i></a> --}}
             
           </div>
           <div class="col-md-12">
@@ -91,35 +89,31 @@ if(isset($data['start_date']) && isset($data['end_date']))
                 <tbody>
                   <tr>
                     <th>Office Expenses:</th>
-                    <td style="width:100px;text-align:right">{{check($data['office']+$data['other'])}}</td>
+                    <td style="width:100px;text-align:right">{{number_format(check($data['office']+$data['other']))}}</td>
                   </tr>
                   <tr>
                     <th>Staff Salaries:</th>
-                    <td style="width:100px;text-align:right">{{$data['salary']}}</td>
+                    <td style="width:100px;text-align:right">{{number_format($data['salary'])}}</td>
                   </tr>
                   <tr>
                     <th>Agent Payment:</th>
-                    <td style="width:100px;text-align:right">{{$data['agent']}}</td>
+                    <td style="width:100px;text-align:right">{{number_format($data['agent'])}}</td>
                   </tr>
                   <tr>
                     <th>Client & Money Receipt Discount:</th>
-                    <td style="width:100px;text-align:right">{{$data['discount']}}</td>
+                    <td style="width:100px;text-align:right">{{number_format($data['discount'])}}</td>
                   </tr>
                   <tr>
                     <th>Bank Charge:</th>
-                    <td style="width:100px;text-align:right">{{$data['bank_charge']}}</td>
+                    <td style="width:100px;text-align:right">{{number_format($data['bank_charge'])}}</td>
                   </tr>
                   <tr>
                     <th>Vendor AIT:</th>
-                    <td style="width:100px;text-align:right">{{$data['ait']}}</td>
+                    <td style="width:100px;text-align:right">{{number_format($data['ait'])}}</td>
                   </tr>
-                  {{-- <tr>
-                    <th>Others:</th>
-                    <td style="width:100px;text-align:right">{{$data['other']}}</td>
-                  </tr> --}}
                   <tr>
                     <th>Total Expense:</th>
-                    <th style="width:100px;text-align:right">{{$data['total']}} </th>
+                    <th style="width:100px;text-align:right">{{number_format($data['total'])}} </th>
                   </tr>
               </tbody>
             </table>
@@ -133,8 +127,6 @@ if(isset($data['start_date']) && isset($data['end_date']))
             <h4 class="box-title">Sales & Profit Details</h4>
           </div>
           <div class="col-md-12 text-right toolbar-icon">
-            {{-- <a href="{{route('expense.index')}}" title="View {{Session::get('_types')}} expenses" class="label label-success"><i class="fa fa-list"></i></a> --}}
-            {{-- <a href="#" title="Print" class="label label-info"><i class="fa fa-print"></i></a> --}}
             
           </div>
           <div class="col-md-12">
@@ -142,35 +134,35 @@ if(isset($data['start_date']) && isset($data['end_date']))
                 <tbody>
                   <tr>
                     <th>Sales Amount:</th>
-                    <td style="width:100px;text-align:right">{{check($data['sales'])}}</td>
+                    <td style="width:100px;text-align:right">{{number_format(check($data['sales']))}}</td>
                   </tr>
                   <tr>
                     <th>Purchase Price:</th>
-                    <td style="width:100px;text-align:right">{{$data['purchase']}}</td>
+                    <td style="width:100px;text-align:right">{{number_format($data['purchase'])}}</td>
                   </tr>
                   <tr>
                     <th>Sales Profit:</th>
-                    <td style="width:100px;text-align:right">{{$data['profit']}}</td>
+                    <td style="width:100px;text-align:right">{{number_format($data['profit'])}}</td>
                   </tr>
                   <tr>
                     <th>Refund Profit:</th>
-                    <td style="width:100px;text-align:right">{{$data['refund']}}</td>
+                    <td style="width:100px;text-align:right">{{number_format($data['refund'])}}</td>
                   </tr>
                   <tr>
                     <th>Tour Package Profit:</th>
-                    <td style="width:100px;text-align:right">{{$data['tour_profit']}}</td>
+                    <td style="width:100px;text-align:right">{{number_format($data['tour_profit'])}}</td>
                   </tr>
                   <tr>
                     <th>Service Charge:</th>
-                    <td style="width:100px;text-align:right">{{$data['service_charge']}}</td>
+                    <td style="width:100px;text-align:right">{{number_format($data['service_charge'])}}</td>
                   </tr>
                   <tr>
                     <th>Gross Profit/Loss:</th>
-                    <th style="width:100px;text-align:right">{{$data['profit']+$data['refund']}}</th>
+                    <th style="width:100px;text-align:right">{{number_format($data['profit']+$data['refund'])}}</th>
                   </tr>
                   <tr>
                     <th>Void Charge:</th>
-                    <td style="width:100px;text-align:right">{{$data['void']}} </td>
+                    <td style="width:100px;text-align:right">{{number_format($data['void'])}} </td>
                   </tr>
               </tbody>
             </table>
@@ -184,11 +176,11 @@ if(isset($data['start_date']) && isset($data['end_date']))
         <div class="box box-info">
           <table class="table">
             <tr>
-              <td style="text-align: right">Total Gross Profit/Loss = <b>{{$data['gross_profit']}}</b></td>
+              <td style="text-align: right">Total Gross Profit/Loss = <b>{{number_format($data['gross_profit'])}}</b></td>
               
-              <td style="text-align: right">Total Expenses = <b>{{$data['total']}}</b></td>
+              <td style="text-align: right">Total Expenses = <b>{{number_format($data['total'])}}</b></td>
               
-              <td style="text-align: right">Net Profit/Loss = <b>{{$data['gross_profit'] - $data['total']}}</b></td>
+              <td style="text-align: right">Net Profit/Loss = <b>{{number_format($data['gross_profit'] - $data['total'])}}</b></td>
               
             </tr>
           </table>

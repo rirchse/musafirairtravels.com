@@ -11,6 +11,7 @@ use App\Sale;
 use App\Refund;
 use App\RefundItem;
 use App\Account;
+use App\InvoiceOther;
 use Auth;
 use Image;
 use File;
@@ -72,12 +73,6 @@ class ExpenseCtrl extends Controller
     {
         $source = New SourceCtrl;
         $data = $request->all();
-        
-    //    $this->validate($request, [
-    //         'name'              => 'required|max:255',
-    //         'business_name'     => 'required|max:255',
-    //         'contact'           => 'required|max:11',            
-    //     ]);
 
         if(isset($data['_token']))
         {
@@ -181,14 +176,14 @@ class ExpenseCtrl extends Controller
         
         try{
             Expense::where('id', $id)->update($data);
-        }
-        catch(e $message)
-        {
-            //
-        }
 
-        Session::flash('success', 'The Expense Successfully Update');
-        return redirect()->route('expense.index');
+            Session::flash('success', 'The Expense Successfully Update');
+            return redirect()->route('expense.index');
+        }
+        catch(\Exception $e)
+        {
+          return $e->getMessage();
+        }
     }
 
     /**
@@ -205,7 +200,7 @@ class ExpenseCtrl extends Controller
         {
             File::delete($ex_image);
         }
-        // dd(File::exists(public_path($expense->image)));
+        
         $expense->delete();
 
         // update account
@@ -254,7 +249,7 @@ class ExpenseCtrl extends Controller
         /** sales and profit */
         $data['sales'] = Sale::sum('client_price');
         $data['purchase'] = Sale::sum('purchase');
-        $data['profit'] = Sale::sum('profit');
+        $data['profit'] = Sale::sum('profit')+InvoiceOther::sum('profit');
         $data['tour_profit'] = 0;
         $data['service_charge'] = 0;
         $data['refund'] = RefundItem::sum('client_charge') - RefundItem::sum('vendor_charge');

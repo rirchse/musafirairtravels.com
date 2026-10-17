@@ -342,9 +342,14 @@ class SaleCtrl extends Controller
     public function edit($id)
     {
         $sale = Sale::leftJoin('customers', 'customers.id', 'sales.customer_id')
-        ->select('sales.*', 'customers.name', 'customers.contact', 'customers.address')->find($id);
+        ->select('sales.*', 'customers.name', 'customers.contact', 'customers.address')
+        ->find($id);
+
         $type = $sale->type;
-        $vendors = Vendor::orderBy('id', 'DESC')->where('status', 'Active')->get();
+        $vendors = Vendor::orderBy('id', 'DESC')
+        ->where('status', 'Active')
+        ->get();
+
         $client = Customer::find($sale->customer_id);
         // dd($client);
         return view('layouts.sales.edit_sale', compact('sale', 'type', 'vendors', 'client'));
@@ -420,10 +425,6 @@ class SaleCtrl extends Controller
     {
         $type = 'Re-Issued';
         $sales = Sale::leftJoin('customers', 'customers.id', 'sales.customer_id')->where('sales.status', 'Re-Issued');
-        // if($type)
-        // {
-        //     $sales = $sales->where('type', $type);
-        // }
         $sales = $sales->select('sales.*', 'customers.name', 'customers.contact', 'customers.email')->orderBy('sales.id','DESC')->paginate(20);
         
         return view('layouts.sales.view_sale', compact('sales', 'type'));
