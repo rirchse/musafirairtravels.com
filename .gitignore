@@ -5,7 +5,7 @@
 /public/uploads
 /storage/*.key
 /storage
-/storage/framework/views
+/storage/framework/views/*
 /vendor
 .env
 .env.backup
