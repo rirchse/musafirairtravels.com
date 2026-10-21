@@ -255,7 +255,7 @@ class ExpenseCtrl extends Controller
         $data['service_charge'] = 0;
         $data['refund'] = RefundItem::sum('client_charge') - RefundItem::sum('vendor_charge');
         $data['void'] = 0;
-        $data['gross_profit'] = $data['profit']+$data['refund'];
+        $data['gross_profit'] = $data['profit']+$data['refund']+$data['other_profit'];
 
         return view('/layouts.expenses.tracking', compact('data'));
     }
@@ -313,7 +313,7 @@ class ExpenseCtrl extends Controller
         ->sum('refund_items.vendor_charge');
 
         $data['void'] = 0;
-        $data['gross_profit'] = $data['profit'] + $data['refund'];
+        $data['gross_profit'] = $data['profit'] + $data['refund'] + $data['other_profit'];
         $data['start_date'] = $request->start_date;
         $data['end_date'] = $request->end_date;
 
