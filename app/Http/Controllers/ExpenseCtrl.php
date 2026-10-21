@@ -301,6 +301,8 @@ class ExpenseCtrl extends Controller
 
         $data['profit'] = Sale::whereRaw('DATE(created_at) >= ?', [$request->start_date])->whereRaw('DATE(created_at) <= ?', [$request->end_date])->sum('profit');
 
+        $data['other_profit'] = InvoiceOther::whereRaw('DATE(created_at) >= ?', [$request->start_date])->whereRaw('DATE(created_at) <= ?', [$request->end_date])->sum('profit');
+
         $data['tour_profit'] = 0;
         $data['service_charge'] = 0;
 
