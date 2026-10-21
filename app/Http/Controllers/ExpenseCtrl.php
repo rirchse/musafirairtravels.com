@@ -249,7 +249,8 @@ class ExpenseCtrl extends Controller
         /** sales and profit */
         $data['sales'] = Sale::sum('client_price');
         $data['purchase'] = Sale::sum('purchase');
-        $data['profit'] = Sale::sum('profit')+InvoiceOther::sum('profit');
+        $data['profit'] = Sale::sum('profit');
+        $data['other_profit'] = InvoiceOther::sum('profit');
         $data['tour_profit'] = 0;
         $data['service_charge'] = 0;
         $data['refund'] = RefundItem::sum('client_charge') - RefundItem::sum('vendor_charge');

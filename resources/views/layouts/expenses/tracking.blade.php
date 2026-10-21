@@ -145,6 +145,10 @@ if(isset($data['start_date']) && isset($data['end_date']))
                     <td style="width:100px;text-align:right">{{number_format($data['profit'])}}</td>
                   </tr>
                   <tr>
+                    <th>VISA/Hotel/Others Profit:</th>
+                    <td style="width:100px;text-align:right">{{number_format($data['other_profit'])}}</td>
+                  </tr>
+                  <tr>
                     <th>Refund Profit:</th>
                     <td style="width:100px;text-align:right">{{number_format($data['refund'])}}</td>
                   </tr>
