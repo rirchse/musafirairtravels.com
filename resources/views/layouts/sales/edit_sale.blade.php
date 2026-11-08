@@ -8,7 +8,6 @@
     <li class="active">Invoice</li>
 </ol>
 </section>
-{{-- {{dd($client)}} --}}
 <!-- Main content -->
 <section class="content">
   <div class="row"> <!-- left column -->
@@ -20,10 +19,16 @@
         </div>
         <div class="box-body">
             <div class="col-md-12">
-                {{-- <div class="form-group">
-                    <label class="control-label" for="search">Search Client</label>
-                    <input class="form-control" id="search" type="text" placeholder="Search By Name, Email, Mobile, Ticket Number" onkeyup="searchClient(this)">
-                </div> --}}
+              <input type="hidden" id="customer_id" name="customer_id" value="{{$sale->customer_id}}">
+
+              <div class="form-group">
+                <select name="customer_id" id="" class="form-control">
+                  <option value="">Change Client</option>
+                  @foreach($clients as $key => $value)
+                  <option value="{{$value->id}}" {{$value->id == $client->id ? 'selected': ''}}>{{$value->name}}</option>
+                  @endforeach
+                </select>
+              </div>
                 @if($client)
                 <div id="clientInfo">
                     <table class="table">
@@ -51,7 +56,6 @@
               <h3 style="color: #800" class="box-title">Invoice Information of [{{$type}}]</h3>
           </div>
           <div class="box-body">
-            <input type="hidden" id="customer_id" name="customer_id" value="{{$sale->customer_id}}">
             <input type="hidden" id="type" name="type" value="{{$type}}">
             <div class="col-md-6">
                 <div class="form-group">
@@ -385,9 +389,6 @@ function profitCalc()
     profit.value = (Number(net_commission.value) + Number(other_bonus.value) + Number(extra_fee.value) - Number(discount.value)).toFixed(2);
 }
     /** ----------------------------- Search Customer by ajax --------------- **/
-    // var mobile = document.getElementById('mobile');
-    // var search_customer = document.getElementById('search_customer');
-    // mobile.addEventListener('keyup', getCustomer);
 
     function searchClient(e)
     {
@@ -416,7 +417,7 @@ function profitCalc()
                         }
                     },
                     error: function(data) { 
-                        //  alert('Could not retrive data from database!');
+                      console.error(data);
                     }
                 });
             }, 1000);

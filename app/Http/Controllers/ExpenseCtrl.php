@@ -60,7 +60,12 @@ class ExpenseCtrl extends Controller
         $users = User::select('name', 'id')->get();
         $employees = Employee::get();
         $accounts = Account::all();
-        return view('layouts.expenses.create', compact('users', 'employees', 'accounts'));
+        $expenses = Expense::orderBy('id', 'desc')
+        ->where('created_at', 'like', date('Y-m-d').'%')
+        ->select('id', 'title', 'amount')
+        ->get();
+        
+        return view('layouts.expenses.create', compact('users', 'employees', 'accounts', 'expenses'));
     }
 
     /**
@@ -92,17 +97,18 @@ class ExpenseCtrl extends Controller
             Account::where('id', $account->id)->update(['balance' => $balance]);
         }
 
-        try{
+        try {
             Expense::insert($data);
+            Session::flash('success', 'Expense Successfully Saved');
         }
-        catch(e $message)
+        catch(\Exception $e)
         {
-            //
+            return $e->getMessage();
         }
-        $expense_id = Expense::orderBy('id', 'DESC')->first()->id;
+        // $expense_id = Expense::orderBy('id', 'DESC')->first()->id;        
+        // return redirect()->route('expense.show', $expense_id);
 
-        Session::flash('success', 'Expense Successfully Saved');
-        return redirect()->route('expense.show', $expense_id);
+        return back();
     }
 
     /**

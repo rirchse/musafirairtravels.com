@@ -351,8 +351,11 @@ class SaleCtrl extends Controller
         ->get();
 
         $client = Customer::find($sale->customer_id);
+        $clients = Customer::orderBy('id', 'desc')
+        ->select('id', 'name')
+        ->get();
         // dd($client);
-        return view('layouts.sales.edit_sale', compact('sale', 'type', 'vendors', 'client'));
+        return view('layouts.sales.edit_sale', compact('sale', 'type', 'vendors', 'client', 'clients'));
     }
 
     /**
