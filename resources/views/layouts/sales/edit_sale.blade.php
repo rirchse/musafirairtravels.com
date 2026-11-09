@@ -24,7 +24,7 @@
               @if($clients)
 
               <div class="form-group">
-                <select name="customer_id" id="" class="form-control">
+                <select name="customer_id" id="" class="form-control select2">
                   <option value="">Change Client</option>
                   @foreach($clients as $key => $value)
                   <option value="{{$value->id}}" {{$client && $client->id == $value->id ? 'selected': ''}}>{{$value->name}}</option>
@@ -457,6 +457,12 @@ function profitCalc()
             }
         });
     }
-    
+</script>
+@endsection
+@section('scripts')
+<script>
+  
+    //select search option
+    $(function (){ $('.select2').select2() });
 </script>
 @endsection
