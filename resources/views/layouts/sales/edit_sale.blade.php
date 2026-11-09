@@ -459,6 +459,7 @@ function profitCalc()
     }
 </script>
 @endsection
+
 @section('scripts')
 <script>
   
