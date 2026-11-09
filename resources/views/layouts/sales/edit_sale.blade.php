@@ -21,6 +21,8 @@
             <div class="col-md-12">
               <input type="hidden" id="customer_id" name="customer_id" value="{{$sale->customer_id}}">
 
+              @if($clients)
+
               <div class="form-group">
                 <select name="customer_id" id="" class="form-control">
                   <option value="">Change Client</option>
@@ -29,6 +31,9 @@
                   @endforeach
                 </select>
               </div>
+              
+              @endif
+
                 @if($client)
                 <div id="clientInfo">
                     <table class="table">
