@@ -27,11 +27,11 @@
                 <select name="customer_id" id="" class="form-control">
                   <option value="">Change Client</option>
                   @foreach($clients as $key => $value)
-                  <option value="{{$value->id}}" {{$value->id == $client->id ? 'selected': ''}}>{{$value->name}}</option>
+                  <option value="{{$value->id}}" {{$client && $client->id == $value->id ? 'selected': ''}}>{{$value->name}}</option>
                   @endforeach
                 </select>
               </div>
-              
+
               @endif
 
                 @if($client)
@@ -56,7 +56,7 @@
                 @endif
             </div>
             <div class="clearfix"></div>
-        </div>
+          </div>
           <div class="box-header with-border">
               <h3 style="color: #800" class="box-title">Invoice Information of [{{$type}}]</h3>
           </div>
